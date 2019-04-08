@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "init.py", line 2, in <module>
+    from app import init
+  File "/home/ec2-user/wechat/app/__init__.py", line 2, in <module>
+    from .server import start
+  File "/home/ec2-user/wechat/app/server.py", line 96
+    break
+    ^
+SyntaxError: 'break' outside loop
