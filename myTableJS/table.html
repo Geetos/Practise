@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='UTF-8'>
+	<title></title>
+	<script src='js/jquery-3.3.1.min.js'></script>
+	<script src='js/myTable.js'></script>
+	<link rel="stylesheet" href="css/font-awesome/css/all.css">
+	<link rel="stylesheet" href="css/myTable.css">
+</head>
+<body>
+	<div myTable="enable" id="table-test"></div>
+</body>
+<script type="text/javascript">
+	let table = new myTable({
+		anchor: "table-test",
+		fields: ["课程", "教师", "分数"],
+		keyname:["course","teacher","score"],
+		functions: {
+			columnLine: true,
+			insert: true,
+			modify: true,
+			search: true,
+			delete: true,
+			commit: true,
+			refresh: true,
+			undoOperation: true,
+			autoReFresh: false,
+			refreshFrequency: 1000
+		},
+		style: {
+			strip: true,
+			darkMode: false,
+			tableBorder: true,
+			headerInfo: '新表格',
+		},
+		ajax: [{
+			action: myTable.INSERT,
+			type: 'POST',
+			url: 'localhost/add',
+			success: null,
+			fail: null
+		}, {
+			action: myTable.MODIFY,
+			type: 'POST',
+			url: 'localhost/modify',
+			success: null,
+			fail: null
+		}, {
+			action: myTable.DELETE,
+			type: 'POST',
+			url: 'localhost/delete',
+			success: null,
+			ail: null
+		}]
+	})
+
+	table.insertRow([
+		['Java语言程序设计', 'Daniel Liang', '9yuiuy54tyu7'],
+		['离散数学', 'Amazon', '45'],
+		['数据结构', '线性代数', '32'],
+		['高等数学', 'Aurora Aksnes', '34'],
+		['计算机组织与结构', 'Lorder', '20'],
+		['PornHub', 'See You Again', '99']
+	])
+</script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src='js/bootstrap.js'></script>
+
+</html>
