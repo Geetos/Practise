@@ -1,4 +1,4 @@
-let test;
+let test1,test2;
 class myTable {
     static INSERT = 0
     static MODIFY = 1
@@ -6,15 +6,21 @@ class myTable {
 
     constructor(dat) {
         this.dat = dat
+        this._getRowIDByEvent = (e) => ($(e)[0].currentTarget.attributes.value.value)
+        this._setAttrBtn = (dom_id,template) => $(template).attr('value',dom_id)[0].outerHTML
+        this._changeLog = []
         // templates for generating DOMs
         this.template = {
             tableHeader: "<div class='myTable-header'><h3></h3><div class='panel-btn' id='panel'></div></div>",
             insertBtn: "<span id='add-item' class='btn btn-sm btn-success myTable-btn'><i class='fas fa-plus-square'></i>增加数据</span>",
             deleteBtn: "<span id='del-item' class='btn btn-sm btn-danger myTable-btn myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-trash'></i></spam>",
             modifyBtn: "<span id='mod-item' class='btn btn-sm btn-info myTable-btn myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-edit'></i></span>",
-            createBtn: "<span id='cre-item' class='btn btn-sm btn-success myTable-btn myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-check'></i></span>",
-            cancelBtn: "<span id='can-item' class='btn btn-sm btn-danger myTable-btn myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-times'></i></span>",
-            commitBtn: null,
+            createBtn: "<span id='cre-item' class='btn btn-sm btn-success myTable-btn myTable-btn-cell' style='color:white'><i class='fas fa-check'></i></span>",
+            cancelBtn: "<span id='can-item' class='btn btn-sm btn-danger myTable-btn myTable-btn-cell' style='color:white'><i class='fas fa-times'></i></span>",
+            commitBtn: "<span id='com-item' class='btn btn-sm btn-warning myTable-btn'><i class='fas fa-check' ></i>提交更改</span>",
+            newRowDot: "<div class='new-line-dot'></div>",
+            modifyRowDot:"",
+            deleteRowDot:"",
             searchTextField: null,
             table: "<table><thead><tr></tr></thead><tbody/></table>",
         }
@@ -34,19 +40,30 @@ class myTable {
         for (let i = 1; i < values.length; i++) id += ' ' + values[i]
         return id
     }
+
+    
+    _guid(){
+        let S4 = () => (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        return (S4()+S4());
+    }
+
     // Paint table
     _paint() {
         // Make sure anchored DOM exists
         if (this._getDom(this.dat.anchor).length == 0) return;
 
         // Exists!
-        //If header info is needed
+        // If header info is needed
         if (this.dat.style.hasOwnProperty('headerInfo')) {
             $(this.template.tableHeader).appendTo(this._getDomId(this.dat.anchor))
             this._getDom(this._getDomId(this.dat.anchor, 'h3')).html(this.dat.style.headerInfo)
             if (this.dat.functions.insert) {
                 $(this.template.insertBtn).appendTo(this._getDomId(this.dat.anchor, '#panel'))
                 this._getDom(this._getDomId(this.dat.anchor, '#add-item')).attr('name', this.dat.anchor)
+            }
+            if (this.dat.functions.commit){
+                $(this.template.commitBtn).appendTo(this._getDomId(this.dat.anchor, '#panel'))
+                this._getDom(this._getDomId(this.dat.anchor, '#com-item')).attr('name', this.dat.anchor)
             }
         }
 
@@ -61,7 +78,7 @@ class myTable {
             $("<th>" + item + "</th>").appendTo(this._getDomId(this.dat._table, 'thead', 'tr'))
         })
         this._getDom(this._getDomId(this.dat._table, 'thead', 'tr', 'th:last')).addClass('lastSndCell')
-        $("<th width=80px class='lastCell'></th>").appendTo(this._getDomId(this.dat._table, 'thead', 'tr'))
+        $("<th width=85px class='lastCell'></th>").appendTo(this._getDomId(this.dat._table, 'thead', 'tr'))
 
         // Set default style
         this._getDom(this.dat._table).addClass("myTable table table-sm ")
@@ -80,42 +97,61 @@ class myTable {
                 this.insert()
             })
         }
+
+        if(this.dat.functions.commit){
+            this._getDom(this._getDomId(this.dat.anchor, '#com-item')).bind('click', ()=>{
+                this.commitChange()
+            })
+        }
     }
 
     insert() {
-        let editRow = "<tr class='row-insert'><th>#</th>"
+        // Unique code for identifying each row
+        let uuid = this._guid()
+        let editRow = $("<tr/>").attr('id', uuid).addClass('row-insert')
+        let createBtn = this._setAttrBtn(uuid, this.template.createBtn)
+        let cancelBtn = this._setAttrBtn(uuid, this.template.cancelBtn)
+        $('<th>#</th>').appendTo($(editRow))
         for (let i = 0; i < this.dat.fields.length; i++) {
-            editRow += "<th contenteditable='true'></th>"
+            $('<th/>').attr('contenteditable','true').appendTo($(editRow))
         }
-        editRow += '<th>' + this.template.cancelBtn + this.template.createBtn + '</th></tr>'
+        $('<th>'+ cancelBtn + createBtn +'</th>').appendTo($(editRow))
         this._getDom(this._getDomId(this.dat._table, 'tbody', 'tr:eq(0)')).before($(editRow))
 
-
-        this._getDom(this._getDomId(this.dat._table, '#cre-item')).bind('click', (e) => {
-            test = e
+        // Bind create button 
+        $("#cre-item[value="+uuid+"]").bind('click', (e) => {
+            let row_id = this._getRowIDByEvent(e)
             let data = []
-            for (let i = 0; i < this.dat.fields.length; i++) {
-
+            for (let i = 1; i <= this.dat.fields.length; i++) {
+                data.push($(this._getDom(row_id).children('th')[i]).html())
             }
-            // this.insertRow()
+            // Insert row to the bottom of the table
+            this.insertRow([data],0,true)
+            // Add change to chang log
+            this._addChange(myTable.INSERT, data)
+            // Remove this row
+            $("#can-item[value="+row_id+"]").click()
         })
-        this._getDom(this._getDomId(this.dat.anchor, '#can-item')).bind('click', () => {
-            console.log()
+
+        $("#can-item[value="+uuid+"]").bind('click', (e) => {
+            this._getDom(this._getRowIDByEvent(e)).remove()
         })
+
+        
     }
     /**
      * Insert new rows to table.
      * @param {array} data new data
      * @param {int} pos where to insert new data 
      */
-    insertRow(data, pos = 0) {
+    insertRow(data, pos = 0,newRow = false) {
         data.forEach(item => {
             this.dat._length += 1
             let deleteBtn = $(this.template.deleteBtn).clone()
             let modifyBtn = $(this.template.modifyBtn).clone()
-            $('<tr/>').appendTo(this._getDomId(this.dat._table), 'tbody');
+            $('<tr/>').attr('id',this._guid).appendTo(this._getDomId(this.dat._table), 'tbody');
             if (this.dat.functions.columnLine) {
-                $('<th>' + this.dat._length + '</th>').appendTo(this._getDomId(this.dat._table, 'tbody', 'tr:last'))
+                $('<th>' + (newRow ? this.template.newRowDot :'') + this.dat._length + '</th>').appendTo(this._getDomId(this.dat._table, 'tbody', 'tr:last'))
             }
 
             for (let i = 0; i <= item.length; i++) {
@@ -137,7 +173,30 @@ class myTable {
     }
 
     commitChange() {
+        let getAjaxDat = (t) => {
+            this.dat.ajax.forEach(v=>{
+                if (v.action == t) return v
+            })
+        }
 
+        let serialize = (data) => {
+            let serialized_data = 
+            data.forEach(d => {
+
+            })
+        } 
+
+        let ajaxDat = {}
+        this._changeLog.forEach(c=>{
+            switch(c.type){
+                case myTable.INSERT : {let _dat = getAjaxDat(myTable.INSERT);ajaxDat = {
+                    type : _dat.type,
+                    url : _dat.url,
+                    dataType : "json",
+                    data : JSON.stringify(),
+                }}
+            }
+        })
     }
     /**
      * Delete specified row from table
@@ -152,6 +211,17 @@ class myTable {
     }
 
     undoOperation() {
+
+    }
+
+    _addChange(type, data){
+        this._changeLog.push({
+            type: type,
+            data : data
+        })
+    }
+
+    ajax(){
 
     }
 

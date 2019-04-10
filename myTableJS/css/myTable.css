@@ -16,12 +16,13 @@
     padding: 0px;
     padding-top: 2px;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .myTable-btn-cell {
     width: 30px;
     float: right;
-    right:0px;
+    right: 0px;
     margin-left: 5px;
 }
 
@@ -51,14 +52,25 @@
     border-color: #d3ecd9;
 }
 
-.myTable .lastSndCell{
+.myTable .lastSndCell {
     border-right: 0px;
 }
 
-.myTable .lastCell{
+.myTable .lastCell {
     border-left: 0px;
 }
 
-.myTable th{
-    border-color:#a5a4a4 !important;
+.myTable th {
+    border-color: #a5a4a4 !important;
+}
+
+.myTable .new-line-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: green;
+    float: left;
+    margin-top: 6px;
+    margin-right: 4px;
+
 }
