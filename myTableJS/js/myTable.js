@@ -3,21 +3,28 @@ class myTable {
     static INSERT = 0
     static MODIFY = 1
     static DELETE = 2
+    static QUERY = 3
 
     constructor(dat) {
         this.dat = dat
         this._getRowIDByEvent = (e) => ($(e)[0].currentTarget.attributes.value.value)
         this._setAttrBtn = (dom_id,template) => $(template).attr('value',dom_id)[0].outerHTML
+        this._getAjaxDat = (t) => {
+            for(let i=0;i<this.dat.ajax.length;i++){
+                if (this.dat.ajax[i].action == t) return this.dat.ajax[i]
+            }
+        }
         this._changeLog = []
         // templates for generating DOMs
         this.template = {
             tableHeader: "<div class='myTable-header'><h3></h3><div class='panel-btn' id='panel'></div></div>",
-            insertBtn: "<span id='add-item' class='btn btn-sm btn-success myTable-btn'><i class='fas fa-plus-square'></i>增加数据</span>",
-            deleteBtn: "<span id='del-item' class='btn btn-sm btn-danger myTable-btn myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-trash'></i></spam>",
-            modifyBtn: "<span id='mod-item' class='btn btn-sm btn-info myTable-btn myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-edit'></i></span>",
-            createBtn: "<span id='cre-item' class='btn btn-sm btn-success myTable-btn myTable-btn-cell' style='color:white'><i class='fas fa-check'></i></span>",
-            cancelBtn: "<span id='can-item' class='btn btn-sm btn-danger myTable-btn myTable-btn-cell' style='color:white'><i class='fas fa-times'></i></span>",
-            commitBtn: "<span id='com-item' class='btn btn-sm btn-warning myTable-btn'><i class='fas fa-check' ></i>提交更改</span>",
+            insertBtn: "<span id='add-item' class='btn btn-sm btn-success myTable-btn'><i class='fas fa-plus'></i> 增加数据</span>",
+            deleteBtn: "<span id='del-item' class='btn btn-sm btn-danger myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-trash'></i></spam>",
+            modifyBtn: "<span id='mod-item' class='btn btn-sm btn-info myTable-btn-cell myTable-btn-auto' style='color:white'><i class='fas fa-edit'></i></span>",
+            createBtn: "<span id='cre-item' class='btn btn-sm btn-success myTable-btn-cell' style='color:white'><i class='fas fa-check'></i></span>",
+            cancelBtn: "<span id='can-item' class='btn btn-sm btn-danger myTable-btn-cell' style='color:white'><i class='fas fa-times'></i></span>",
+            commitBtn: "<span id='com-item' class='btn btn-sm btn-warning myTable-btn'><i class='fas fa-check'></i> 提交更改</span>",
+            searchText: "<div class='input-group'><div class='nput-group-prepend'><span class='input-group-text' id='basic-addon3'>搜索</span></div><input type='text' class='form-control' id='basic-url' aria-describedby='basic-addon3'></div>",
             newRowDot: "<div class='new-line-dot'></div>",
             modifyRowDot:"",
             deleteRowDot:"",
@@ -54,16 +61,19 @@ class myTable {
 
         // Exists!
         // If header info is needed
-        if (this.dat.style.hasOwnProperty('headerInfo')) {
+        if (this.dat.style.headerPanel) {
             $(this.template.tableHeader).appendTo(this._getDomId(this.dat.anchor))
-            this._getDom(this._getDomId(this.dat.anchor, 'h3')).html(this.dat.style.headerInfo)
+            if(this.dat.style.hasOwnProperty('headerInfo'))
+                this._getDom(this._getDomId(this.dat.anchor, 'h3')).html(this.dat.style.headerInfo)
+
+            if (this.dat.functions.search) {
+                $(this.template.searchText).appendTo(this._getDomId(this.dat.anchor, '#panel'))
+            }
             if (this.dat.functions.insert) {
                 $(this.template.insertBtn).appendTo(this._getDomId(this.dat.anchor, '#panel'))
-                this._getDom(this._getDomId(this.dat.anchor, '#add-item')).attr('name', this.dat.anchor)
             }
             if (this.dat.functions.commit){
                 $(this.template.commitBtn).appendTo(this._getDomId(this.dat.anchor, '#panel'))
-                this._getDom(this._getDomId(this.dat.anchor, '#com-item')).attr('name', this.dat.anchor)
             }
         }
 
@@ -78,7 +88,7 @@ class myTable {
             $("<th>" + item + "</th>").appendTo(this._getDomId(this.dat._table, 'thead', 'tr'))
         })
         this._getDom(this._getDomId(this.dat._table, 'thead', 'tr', 'th:last')).addClass('lastSndCell')
-        $("<th width=85px class='lastCell'></th>").appendTo(this._getDomId(this.dat._table, 'thead', 'tr'))
+        $("<th class='lastCell'></th>").appendTo(this._getDomId(this.dat._table, 'thead', 'tr'))
 
         // Set default style
         this._getDom(this.dat._table).addClass("myTable table table-sm ")
@@ -88,13 +98,13 @@ class myTable {
         if (this.dat.style.darkMode) this._getDom(this.dat._table).addClass("table-dark")
         // If borders are needed
         if (this.dat.style.tableBorder) this._getDom(this.dat._table).addClass("table-bordered")
-        this.dat._length = 0
+        this._length = 0
     }
 
     _addListener() {
         if (this.dat.functions.insert) {
             this._getDom(this._getDomId(this.dat.anchor, '#add-item')).bind('click', () => {
-                this.insert()
+                this._insert()
             })
         }
 
@@ -105,7 +115,7 @@ class myTable {
         }
     }
 
-    insert() {
+    _insert() {
         // Unique code for identifying each row
         let uuid = this._guid()
         let editRow = $("<tr/>").attr('id', uuid).addClass('row-insert')
@@ -115,8 +125,9 @@ class myTable {
         for (let i = 0; i < this.dat.fields.length; i++) {
             $('<th/>').attr('contenteditable','true').appendTo($(editRow))
         }
-        $('<th>'+ cancelBtn + createBtn +'</th>').appendTo($(editRow))
-        this._getDom(this._getDomId(this.dat._table, 'tbody', 'tr:eq(0)')).before($(editRow))
+        $("<th class='lastCell'>"+ cancelBtn + createBtn +'</th>').appendTo($(editRow))
+        if(this._length == 0) this._getDom(this._getDomId(this.dat._table, 'tbody')).append($(editRow))
+        else this._getDom(this._getDomId(this.dat._table, 'tbody', 'tr:eq(0)')).before($(editRow))
 
         // Bind create button 
         $("#cre-item[value="+uuid+"]").bind('click', (e) => {
@@ -136,8 +147,6 @@ class myTable {
         $("#can-item[value="+uuid+"]").bind('click', (e) => {
             this._getDom(this._getRowIDByEvent(e)).remove()
         })
-
-        
     }
     /**
      * Insert new rows to table.
@@ -146,12 +155,12 @@ class myTable {
      */
     insertRow(data, pos = 0,newRow = false) {
         data.forEach(item => {
-            this.dat._length += 1
+            this._length += 1
             let deleteBtn = $(this.template.deleteBtn).clone()
             let modifyBtn = $(this.template.modifyBtn).clone()
             $('<tr/>').attr('id',this._guid).appendTo(this._getDomId(this.dat._table), 'tbody');
             if (this.dat.functions.columnLine) {
-                $('<th>' + (newRow ? this.template.newRowDot :'') + this.dat._length + '</th>').appendTo(this._getDomId(this.dat._table, 'tbody', 'tr:last'))
+                $('<th>' + (newRow ? this.template.newRowDot :'') + this._length + '</th>').appendTo(this._getDomId(this.dat._table, 'tbody', 'tr:last'))
             }
 
             for (let i = 0; i <= item.length; i++) {
@@ -173,30 +182,32 @@ class myTable {
     }
 
     commitChange() {
-        let getAjaxDat = (t) => {
-            this.dat.ajax.forEach(v=>{
-                if (v.action == t) return v
-            })
-        }
-
-        let serialize = (data) => {
-            let serialized_data = 
-            data.forEach(d => {
-
-            })
+        let serialize = (dat, data) => {
+            let serialized_data = {}
+            let ajaxDat = {}
+            for(let i=0;i<data.length;i++){
+                serialized_data[this.dat.keyname[i]] = data[i]
+            }
+            ajaxDat = {
+                type : dat.type,
+                url : dat.url,
+                dataType : "json",
+                data : JSON.stringify(serialized_data),
+            }
+            return ajaxDat
         } 
 
         let ajaxDat = {}
+
         this._changeLog.forEach(c=>{
             switch(c.type){
-                case myTable.INSERT : {let _dat = getAjaxDat(myTable.INSERT);ajaxDat = {
-                    type : _dat.type,
-                    url : _dat.url,
-                    dataType : "json",
-                    data : JSON.stringify(),
-                }}
+                case myTable.INSERT : {
+                    ajaxDat = serialize(this._getAjaxDat(myTable.INSERT), c.data)
+                    break
+                }
             }
         })
+        console.log(ajaxDat)
     }
     /**
      * Delete specified row from table
@@ -221,10 +232,31 @@ class myTable {
         })
     }
 
-    ajax(){
+    fetchTable(){
+        let _dat = this._getAjaxDat(myTable.QUERY)
+        $.ajax({
+            type: _dat.type,
+            url: _dat.url,
+            succuess: (data) => { console.log(data) }
+        })
+    }
+
+    insertColumn(){
 
     }
 
+    _getDateTime(timestamp){
+        var datetime = new Date();
+        datetime.setTime(timestamp);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth()+1;
+        var date = datetime.getDate();
+        var hour = datetime.getHours();
+        var minute = datetime.getMinutes();
+        var second = datetime.getSeconds();
+        var msecond = datetime.getMilliseconds();
+        return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+    }
 }
 // var tableRow = 
 // var tableData = [

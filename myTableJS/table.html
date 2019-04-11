@@ -15,8 +15,9 @@
 <script type="text/javascript">
 	let table = new myTable({
 		anchor: "table-test",
-		fields: ["课程", "教师", "分数"],
-		keyname:["course","teacher","score"],
+		fields: ["合同金额", "商品采购成本", "转包实施成本","项目利润率","已回款金额","回款比例","项目合同回款要求"],
+		keyname:["contractMoney","costMoney","subcontractingCost","profitMargin","paybackMoney","paybackRatio","reamek"],
+		dataType:['text','text','text','text','text','text','text'],
 		functions: {
 			columnLine: true,
 			insert: true,
@@ -33,7 +34,8 @@
 			strip: true,
 			darkMode: false,
 			tableBorder: true,
-			headerInfo: '新表格',
+			headerPanel:true,
+			headerInfo: '资金明细表格',
 		},
 		ajax: [{
 			action: myTable.INSERT,
@@ -47,7 +49,13 @@
 			url: 'localhost/modify',
 			success: null,
 			fail: null
-		}, {
+		},{
+			action : myTable.QUERY,
+			type: 'GET',
+			url: '/moneyinfo/index/1',
+			success: null,
+			fail: null
+		},{
 			action: myTable.DELETE,
 			type: 'POST',
 			url: 'localhost/delete',
@@ -55,14 +63,14 @@
 			ail: null
 		}]
 	})
-
-	table.insertRow([
-		['Java语言程序设计', 'Daniel Liang', '9yuiuy54tyu7'],
-		['离散数学', 'Amazon', '45'],
-		['数据结构', '线性代数', '32'],
-		['高等数学', 'Aurora Aksnes', '34'],
-		['计算机组织与结构', 'Lorder', '20'],
-	])
+	// table.fetchTable()
+	// table.insertRow([
+	// 	['Java语言程序设计', 'Daniel Liang', '9yuiuy54tyu7'],
+	// 	['离散数学', 'Amazon', '45'],
+	// 	['数据结构', '线性代数', '32'],
+	// 	['高等数学', 'Aurora Aksnes', '34'],
+	// 	['计算机组织与结构', 'Lorder', '20'],
+	// ])
 </script>
 <link rel="stylesheet" href="css/bootstrap.css">
 <script src='js/bootstrap.js'></script>
