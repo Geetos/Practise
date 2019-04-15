@@ -5,12 +5,28 @@
 	<meta charset='UTF-8'>
 	<title></title>
 	<script src='js/jquery-3.3.1.min.js'></script>
+	<script src='js/bootstrap-datepicker.js'></script>
+	<script stc='js/Text.js'></script>
+	<script src='js/myTableTemplates.js'></script>
+	<script src='js/tableClass.js'></script>
+	<script src='js/myTableConfig.js'></script>
+	<script src='js/rowClass.js'></script>
 	<script src='js/myTable.js'></script>
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
 	<link rel="stylesheet" href="css/font-awesome/css/all.css">
 	<link rel="stylesheet" href="css/myTable.css">
 </head>
 <body>
 	<div myTable="enable" id="table-test"></div>
+	<div class="form-group">
+		<label for="dtp_input1" class="col-md-2 control-label">DateTime Picking</label>
+		<div class="input-group date form_datetime col-md-5" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1">
+			<input class="form-control" size="16" type="text" value="" readonly>
+			<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+			<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+		</div>
+		<input type="hidden" id="dtp_input1" value="" /><br/>
+	</div>
 </body>
 <script type="text/javascript">
 	let table = new myTable({
@@ -63,14 +79,20 @@
 			ail: null
 		}]
 	})
-	// table.fetchTable()
-	// table.insertRow([
-	// 	['Java语言程序设计', 'Daniel Liang', '9yuiuy54tyu7'],
-	// 	['离散数学', 'Amazon', '45'],
-	// 	['数据结构', '线性代数', '32'],
-	// 	['高等数学', 'Aurora Aksnes', '34'],
-	// 	['计算机组织与结构', 'Lorder', '20'],
-	// ])
+
+	table.insert([
+		['222','qqqq','2222','2.2','1.0','222','remark'],		
+	])
+
+	$('.form_datetime').datepicker({
+        weekStart: 0, //一周从哪一天开始
+        todayBtn:  1, //
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
 </script>
 <link rel="stylesheet" href="css/bootstrap.css">
 <script src='js/bootstrap.js'></script>
