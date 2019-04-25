@@ -110,6 +110,7 @@ class myAjax {
                     break
                 }
         }
+        return true
     }
 
 
@@ -120,6 +121,8 @@ class myAjax {
         // $.ajax({
         //     type: dat.action,
         //     url: dat.url,
+        //     dataType: 'json',
+        //     contentType: 'application/json',
         //     // data: dat.data,
         //     success: function (data) {
         //         reData = data

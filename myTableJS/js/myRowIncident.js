@@ -74,11 +74,12 @@ class myRowIncident {
                             else flag = false
                         })
                         if (flag) {
-                            this.row.table.insert(data)
+                            this.row.table.insert(data,this.row.id)
                             this.row.remove()
                             this.row.table.changeLog.push({
-                                type: tableClass.INSERT,
-                                data: data
+                                type: myRowIncident.CREATE,
+                                data: data,
+                                id: this.row.id
                             })
                         }
                     })
@@ -113,7 +114,7 @@ class myRowIncident {
                             flag = true
                         for (let i = 0; i < this.row.containerList.length; i++) {
                             let val = this.row.containerList[i]
-                            if (val.check(true)) {
+                            if (!val.check()) {
                                 flag = false;
                                 break;
                             }

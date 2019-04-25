@@ -70,7 +70,7 @@ class myText extends DataTypeBase{
     }
 
     get() {
-        return this.dom.val()
+        return (this.constraint == DataUnit.READONLY ? undefined : this.dom.val())
     }
 
     clear() {
@@ -78,6 +78,7 @@ class myText extends DataTypeBase{
     }
 
     check() {
+        if(this.constraint == DataUnit.READONLY) return true
         let flag = true,
             msg = ''
         if (this.constraint == DataUnit.NOTNULL && this.get().length == 0) {

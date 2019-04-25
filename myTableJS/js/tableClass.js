@@ -19,7 +19,7 @@ class tableClass {
         this.ajax = new myAjax(this)
         this.isParent = true
         this.parent = null
-        if (this.dat.hasOwnProperty('parentTable') && this.dat.hasOwnProperty('parentField')){
+        if (this.dat.hasOwnProperty('parentTable') && this.dat.hasOwnProperty('parentField')) {
             this.isParent = false
             this.parent = {
                 'table': this.dat.parentTable.table,
@@ -33,13 +33,13 @@ class tableClass {
 
     // Paint table
     paint() {
-        if(_getDom(this.dat.sectionAnchor).children().length > 0){
+        if (_getDom(this.dat.sectionAnchor).children().length > 0) {
             this.clearTable()
             _getDom(this.dat.sectionAnchor).children().remove()
         }
         // Exists!
         // If header info is needed
-        
+
         if (this.dat.style.headerPanel) {
             $(_template.tableHeader).appendTo(_getDomId(this.dat.sectionAnchor))
             if (this.dat.style.hasOwnProperty('headerInfo'))
@@ -118,6 +118,7 @@ class tableClass {
     create() {
         let row = new rowClass(this.dat, this, tableClass.CREATE)
         row.create(1)
+        row.id = _guid()
     }
 
     searchTable(data) {
@@ -130,10 +131,46 @@ class tableClass {
     }
 
     commitChange() {
+        if(this.changeLog.length == 0){
+            alert("当前没有可递交的变更")
+            return
+        }
+        let rowStack = {}
         // Merge Operation
         this.changeLog.forEach(v => {
-            this.ajax.execute(v)
+            if (v.id in rowStack) {
+                switch (v.type) {
+                    case myRowIncident.DELETE:
+                        {
+                            if (rowStack[v.id].type == myRowIncident.CREATE) {
+                                delete(rowStack[v.id])
+                            } else {
+                                rowStack[v.id] = v
+                            }
+                            break
+                        }
+                    case myRowIncident.MODIFY:
+                        {
+                            let pV = rowStack[v.id]
+                            for(let item in v.data){
+                                pV.data[item] = v.data[item]  
+                            }
+                            break
+                        }
+                }
+            }else rowStack[v.id] = v 
         })
+
+        if(!confirm("确认递交一下更改吗？\n" + this.logPrinter(rowStack))) return
+
+        for(let v in rowStack){
+            console.log(rowStack[v])
+            if(!this.ajax.execute(rowStack[v][0])){
+                alert("操作失败！操作类型："+ v.type +" 行ID:"+v.id)
+                return
+            }
+        }
+        this.changeLog = []
     }
 
     clearTable() {
@@ -143,25 +180,31 @@ class tableClass {
     }
 
     refresh() {
+        if(this.changeLog.length > 0 ){
+            if(!confirm("有未递交的变更，确定刷新吗？"))return
+        }
         this.clearTable()
         this.changeLog = []
         this.fetchData()
+        
     }
 
     fetchData() {
-        let reData = this.ajax.execute({type: myAjax.QUERY})
+        let reData = this.ajax.execute({
+            type: myAjax.QUERY
+        })
         if (reData == null) alert('获取数据失败!')
         else {
             // if current table has parent table
             if (!this.isParent) reData = reData[this.parent.field]
             this.setData(reData)
         }
-       
+
     }
 
-    callTable(field, data){
-        this.tabs.forEach(tab=>{
-            if(!tab.table.isParent && tab.table.parent.table.uuid == this.uuid && tab.table.parent.field == field){
+    callTable(field, data) {
+        this.tabs.forEach(tab => {
+            if (!tab.table.isParent && tab.table.parent.table.uuid == this.uuid && tab.table.parent.field == field) {
                 this.dismissTab()
                 tab.show()
                 tab.table.setData(data)
@@ -171,7 +214,8 @@ class tableClass {
         })
     }
 
-    setData(data){
+    setData(data) {
+        if (data.length == 0) return
         data.forEach(item => {
             let data = []
             for (let i = 0; i < this.dat.keyname.length; i++) {
@@ -181,14 +225,27 @@ class tableClass {
         });
     }
 
-    dismissTab(){
+    dismissTab() {
         if (this.child == null) return
-        for(let i=0;i<this.tabs.length;i++){
-            if(this.tabs[i].table.uuid == this.child.uuid){
+        for (let i = 0; i < this.tabs.length; i++) {
+            if (this.tabs[i].table.uuid == this.child.uuid) {
                 this.tabs[i].table.dismissTab()
                 this.tabs[i].remove()
                 return
             }
         }
+    }
+
+    logPrinter(rowStack){
+        let log = ''
+        for(let stack in rowStack){
+            switch (stack.type){
+                case myRowIncident.CREATE:log += "\n新增：";break;
+                case myRowIncident.MODIFY:log += "\n修改 id:" + stack.id;break;
+                case myRowIncident.DELETE:log += "\n删除 id:" + stack.id;break;
+            }
+            log += JSON.stringify(stack.data)
+        }
+        return log
     }
 }
