@@ -4,20 +4,18 @@
 <head>
 	<meta charset='UTF-8'>
 	<title></title>
+	<link rel="stylesheet" href="css/bootstrap.css">
 	<script src='js/jquery-3.3.1.min.js'></script>
 	<script src='js/bootstrap-datepicker.js'></script>
-	<script stc='js/Text.js'></script>
-	<script src='js/myTableTemplates.js'></script>
-	<script src='js/tableClass.js'></script>
-	<script src='js/myTableConfig.js'></script>
-	<script src='js/rowClass.js'></script>
-	<script src='js/myTable.js'></script>
+
 	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
 	<link rel="stylesheet" href="css/font-awesome/css/all.css">
 	<link rel="stylesheet" href="css/myTable.css">
 </head>
+
 <body>
-	<div myTable="enable" id="table-test"></div>
+	<div id='table-test'></div>
+
 	<div class="form-group">
 		<label for="dtp_input1" class="col-md-2 control-label">DateTime Picking</label>
 		<div class="input-group date form_datetime col-md-5" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1">
@@ -25,76 +23,32 @@
 			<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 			<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
 		</div>
-		<input type="hidden" id="dtp_input1" value="" /><br/>
+		<input type="hidden" id="dtp_input1" value="" /><br />
 	</div>
 </body>
+<!-- <script src='js/dist/out/bundle.js'></script> -->
+<script src='js/myTableConfig.js'></script>
+<script src='js/myTableTemplates.js'></script>
+<script src='js/tabPage.js'></script>
+<script src='js/myDataType.js'></script>
+<script src='js/myDataUnit.js'></script>
+<script src='js/myAjax.js'></script>
+<script src='js/myRowIncident.js'></script>
+<script src='js/tableClass.js'></script>
+<script src='js/rowClass.js'></script>
+<script src='js/myTable.js'></script>
 <script type="text/javascript">
-	let table = new myTable({
-		anchor: "table-test",
-		fields: ["合同金额", "商品采购成本", "转包实施成本","项目利润率","已回款金额","回款比例","项目合同回款要求"],
-		keyname:["contractMoney","costMoney","subcontractingCost","profitMargin","paybackMoney","paybackRatio","reamek"],
-		dataType:['text','text','text','text','text','text','text'],
-		functions: {
-			columnLine: true,
-			insert: true,
-			modify: true,
-			search: true,
-			delete: true,
-			commit: true,
-			refresh: true,
-			undoOperation: true,
-			autoReFresh: false,
-			refreshFrequency: 1000
-		},
-		style: {
-			strip: true,
-			darkMode: false,
-			tableBorder: true,
-			headerPanel:true,
-			headerInfo: '资金明细表格',
-		},
-		ajax: [{
-			action: myTable.INSERT,
-			type: 'POST',
-			url: 'localhost/add',
-			success: null,
-			fail: null
-		}, {
-			action: myTable.MODIFY,
-			type: 'POST',
-			url: 'localhost/modify',
-			success: null,
-			fail: null
-		},{
-			action : myTable.QUERY,
-			type: 'GET',
-			url: '/moneyinfo/index/1',
-			success: null,
-			fail: null
-		},{
-			action: myTable.DELETE,
-			type: 'POST',
-			url: 'localhost/delete',
-			success: null,
-			ail: null
-		}]
-	})
-
-	table.insert([
-		['222','qqqq','2222','2.2','1.0','222','remark'],		
-	])
-
 	$('.form_datetime').datepicker({
-        weekStart: 0, //一周从哪一天开始
-        todayBtn:  1, //
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        forceParse: 0,
-        showMeridian: 1
-    });
+		weekStart: 0, //一周从哪一天开始
+		todayBtn: 1, //
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		showMeridian: 1
+	});
 </script>
-<link rel="stylesheet" href="css/bootstrap.css">
+
 <script src='js/bootstrap.js'></script>
 
 </html>

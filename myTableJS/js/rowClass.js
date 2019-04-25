@@ -1,86 +1,87 @@
-class rowClass {
-    static INSERTROW = 0
-    static NEWROW = 1
+// import { _template } from './myTableTemplates.js' 
+// import { myRowIncident } from './myRowIncident.js'
+// import { myText } from './myText.js'
 
+class rowClass {
     constructor(dat, table, type) {
         table.rowList.push(this)
         this.dat = dat
         this.table = table
         this.containerList = []
-        this.uuid = _guid()
-        this.new_row = $('<tr/>').attr('id', this.uuid)
-        let btnPanel = $('<span/>')
-        if (type == rowClass.INSERTROW) {
-            if (this.dat.functions.delete){
-                let deleteBtn = $(_template.deleteBtn).clone()
-                deleteBtn.appendTo(btnPanel)
-            }
-            if (this.dat.functions.modify){
-                let modifyBtn = $(_template.modifyBtn).clone()
-                modifyBtn.appendTo(btnPanel)
-            }
-        } else {
-            let createBtn = $(_template.createBtn).clone()
-            let cancelBtn = $(_template.cancelBtn).clone()
-            this.new_row.addClass('row-insert')
-            createBtn.bind('click', () => {
-                // let row = new rowClass(dat, table, rowClass.INSERTROW)
-                // row.append(data)
-            })
-            cancelBtn.bind('click', () => {
-                this.remove()
-            })
-            cancelBtn.appendTo(btnPanel)
-            createBtn.appendTo(btnPanel)
-        }
+        this.id
+        this.pos = 0
+        this.currentData = []
+        this.rowDom = $('<tr/>')
+        let rowIncident
 
         if (dat.functions.columnLine) {
-            $('<th>' + (type == rowClass.INSERTROW ? 
-                (dat._length + 1) : '#') + '</th>').appendTo(this.new_row)
+            $('<th>' + (type == tableClass.INSERT ?
+                (this.table.length + 1) : '#') + '</th>').appendTo(this.rowDom)
         }
 
         for (let i = 0; i <= dat.fields.length; i++) {
-            $('<th ' + (type == rowClass.INSERTROW ? 
-                (i < dat.fields.length - 1 ? 
+            $('<th ' + (type == tableClass.INSERT ?
+                (i < dat.fields.length - 1 ?
                     '' : (i < dat.fields.length ?
-                         'class="lastSndCell"' : 'class="lastCell"')) : '') + '></th>').appendTo(this.new_row)
+                        'class="lastSndCell"' : 'class="lastCell"')) : '') + '></th>').appendTo(this.rowDom)
         }
 
-        btnPanel.appendTo(this.new_row.children('th:last'))
+        rowIncident = new myRowIncident(this)
+
+        if (type == tableClass.INSERT) {
+            if (this.dat.functions.delete) rowIncident.hookUp(myRowIncident.DELETE)
+            if (this.dat.functions.modify) rowIncident.hookUp(myRowIncident.MODIFY)
+        } else if (type == tableClass.CREATE) {
+            this.rowDom.addClass('row-insert')
+            rowIncident.hookUp(myRowIncident.CANCLE)
+            rowIncident.hookUp(myRowIncident.CREATE)
+        }
     }
 
-    append(data) {
-        this.dat._length += 1
+    append(data, pos = 0) {
+        this.table.length += 1
+        this.pos = this.table.length
         for (let i = 0; i < data.length; i++) {
-            $(this.new_row.children()[(this.dat.functions.columnLine ? i + 1 : i)]).html(data[i])
+            $(this.rowDom.children()[(this.dat.functions.columnLine ? i + 1 : i)]).append(this._fillUnit(this.dat.dataType[i], this.dat.keyname[i], this.dat.constraints[i], false, data[i]))
         }
-        this.new_row.appendTo(_getDomId(this.dat._table, 'tbody'));
+        this.table.append(this.rowDom, pos)
     }
 
-    create(){
-        for(let i=0;i < this.dat.dataType; i++){
-            switch(this.dat.dataType[i]){
-                case 'text': {
-                    let container = new Text(Text.STRING)
-                    $(this.new_row.children()[(this.dat.functions.columnLine ? i + 1 : i)]).append()
-                }
-            }
+    create(pos = 1, preset = undefined) {
+        for (let i = 0; i < this.dat.dataType.length; i++) {
+            $(this.rowDom.children()[(this.dat.functions.columnLine ? i + 1 : i)]).append(this._fillUnit(this.dat.dataType[i], this.dat.keyname[i], this.dat.constraints[i], true, (typeof (preset) == 'undefined' ? undefined : preset[i])))
         }
-
-        if(this.table.isEmpty()) this.new_row.appendTo(_getDomId(this.dat._table,'tbody'))
-        else _getDom(_getDomId(this.dat._table, 'tbody', 'tr:eq(0)')).before(this.new_row)
+        this.table.append(this.rowDom, pos)
     }
 
-    remove(){
-        _getDom(this.uuid).remove()
+    _fillUnit(type, fieldName, constraint, status, value = undefined) {
+        let container =  new DataUnit(type, fieldName, constraint, this.table)
+        container.editable(status)
+        container.set(value)
+        this.currentData.push(container.get())
+        this.containerList.push(container)
+        return container.createDOM()
     }
 
-
-    modifyRow(data, pos) {
-
+    remove() {
+        this.table.rowList.pop(this.table.rowList.indexOf(this))
+        this.rowDom.remove()
     }
 
-    getData(num){
-
+    modify(data) {
+        let changeData = {}
+        for (let item in data) {
+            let num = this.dat.keyname.indexOf(item)
+            this.currentData[num] = data[item]
+            this.containerList[num].set(data[item])
+            changeData[item] = data[item]
+        }
+        this.table.changeLog.push({
+            type: myRowIncident.MODIFY,
+            data: changeData,
+            id: this.id
+        })
     }
 }
+
+// export { rowClass }

@@ -1,6 +1,6 @@
 # coding:utf-8
 class Db_Config:
-    HOST = 'localhost'
+    HOST = '13.230.174.124'
     DB = 'wechat'
     TABLE = 'msg_record'
     USER = 'gleamora'
@@ -10,7 +10,7 @@ class Db_Config:
 
 class App_Config:
     HOST = '0.0.0.0'
-    PORT = 9997
+    PORT = 9996
     MAX_CONNEC = 5
     LOG_FILE = 'server.log'
     echo = False

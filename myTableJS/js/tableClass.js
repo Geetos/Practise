@@ -1,48 +1,67 @@
-class tableClass{
-    static INSERT = 0
-    static MODIFY = 1
-    static DELETE = 2
-    static QUERY = 3
+// import { _getDom, _getDomId } from './myTableConfig.js'
+// import { myAjax } from './myAjax.js'
+// import { rowClass } from './rowClass.js'
+// import { _template } from './myTableTemplates.js' 
 
-    constructor(dat) {
+class tableClass {
+    static INSERT = 20
+    static CREATE = 21
+    static COMMIT = 22
+    static QUERY = 23
+
+    constructor(dat, tabs) {
         this.dat = dat
+        this.tabs = tabs
+        this.uuid = _guid()
+        this.length = 0
         this.rowList = []
-        this._getRowIDByEvent = (e) => ($(e)[0].currentTarget.attributes.value.value)
-        this._setAttrBtn = (dom_id,template) => $(template).attr('value',dom_id)[0].outerHTML
-        this._getAjaxDat = (t) => {
-            for(let i=0;i<this.dat.ajax.length;i++){
-                if (this.dat.ajax[i].action == t) return this.dat.ajax[i]
+        this.changeLog = []
+        this.ajax = new myAjax(this)
+        this.isParent = true
+        this.parent = null
+        if (this.dat.hasOwnProperty('parentTable') && this.dat.hasOwnProperty('parentField')){
+            this.isParent = false
+            this.parent = {
+                'table': this.dat.parentTable.table,
+                'field': this.dat.parentField
             }
+            dat.style = this.dat.parentTable.dat.style
+            dat.functions = this.dat.parentTable.dat.functions
         }
-        this._changeLog = []
+        this.child = null
     }
 
     // Paint table
     paint() {
-        // Make sure anchored DOM exists
-        if (_getDom(this.dat.anchor).length == 0) return;
-
+        if(_getDom(this.dat.sectionAnchor).children().length > 0){
+            this.clearTable()
+            _getDom(this.dat.sectionAnchor).children().remove()
+        }
         // Exists!
         // If header info is needed
+        
         if (this.dat.style.headerPanel) {
-            $(_template.tableHeader).appendTo(_getDomId(this.dat.anchor))
-            if(this.dat.style.hasOwnProperty('headerInfo'))
-                _getDom(_getDomId(this.dat.anchor, 'h3')).html(this.dat.style.headerInfo)
+            $(_template.tableHeader).appendTo(_getDomId(this.dat.sectionAnchor))
+            if (this.dat.style.hasOwnProperty('headerInfo'))
+                _getDom(_getDomId(this.dat.sectionAnchor, 'h3')).html(this.dat.style.headerInfo)
 
             if (this.dat.functions.search) {
-                $(_template.searchText).appendTo(_getDomId(this.dat.anchor, '#panel'))
+                $(_template.searchText).appendTo(_getDomId(this.dat.sectionAnchor, '#panel'))
+            }
+            if (this.dat.functions.refresh) {
+                $(_template.refreshBtn).appendTo(_getDomId(this.dat.sectionAnchor, '#panel'))
             }
             if (this.dat.functions.insert) {
-                $(_template.insertBtn).appendTo(_getDomId(this.dat.anchor, '#panel'))
+                $(_template.insertBtn).appendTo(_getDomId(this.dat.sectionAnchor, '#panel'))
             }
-            if (this.dat.functions.commit){
-                $(_template.commitBtn).appendTo(_getDomId(this.dat.anchor, '#panel'))
+            if (this.dat.functions.commit) {
+                $(_template.commitBtn).appendTo(_getDomId(this.dat.sectionAnchor, '#panel'))
             }
         }
 
         // Setting Table DOM
-        $(_template.table).appendTo(_getDomId(this.dat.anchor))
-        this.dat._table = _getDomId(this.dat.anchor, 'table')
+        $(_template.table).appendTo(_getDomId(this.dat.sectionAnchor))
+        this.dat._table = _getDomId(this.dat.sectionAnchor, 'table')
 
         // Setting fields
         // If column line is needed
@@ -61,113 +80,115 @@ class tableClass{
         if (this.dat.style.darkMode) _getDom(this.dat._table).addClass("table-dark")
         // If borders are needed
         if (this.dat.style.tableBorder) _getDom(this.dat._table).addClass("table-bordered")
-        this.dat._length = 0
+
+        this._addListener()
     }
 
-    isEmpty(){
-        if(_getDom(_getDomId(this.dat._table, 'tbody')).children().length == 0) return true
+    _addListener() {
+        if (this.dat.functions.insert) {
+            _getDom(_getDomId(this.dat.sectionAnchor, '#add-item')).bind('click', () => {
+                this.create()
+            })
+        }
+
+        if (this.dat.functions.commit) {
+            _getDom(_getDomId(this.dat.sectionAnchor, '#com-item')).bind('click', () => {
+                this.commitChange()
+            })
+        }
+
+        if (this.dat.functions.refresh) {
+            _getDom(_getDomId(this.dat.sectionAnchor, '#ref-item')).bind('click', () => {
+                this.refresh()
+            })
+        }
+    }
+
+    isEmpty() {
+        if (_getDom(_getDomId(this.dat._table, 'tbody')).children().length == 0) return true
         else return false
     }
 
-    _insert() {
-        // Unique code for identifying each row
-        let uuid = _guid()
-        let editRow = $("<tr/>").attr('id', uuid).addClass('row-insert')
-        let createBtn = this._setAttrBtn(uuid, _template.createBtn)
-        let cancelBtn = this._setAttrBtn(uuid, _template.cancelBtn)
-        $('<th>#</th>').appendTo($(editRow))
-        for (let i = 0; i < this.dat.fields.length; i++) {
-            $('<th/>').attr('contenteditable','true').appendTo($(editRow))
-        }
-        $("<th class='lastCell'>"+ cancelBtn + createBtn +'</th>').appendTo($(editRow))
-        if(this._length == 0) _getDom(_getDomId(this.dat._table, 'tbody')).append($(editRow))
-        else _getDom(_getDomId(this.dat._table, 'tbody', 'tr:eq(0)')).before($(editRow))
-
-        // Bind create button 
-        $("#cre-item[value="+uuid+"]").bind('click', (e) => {
-            let row_id = this._getRowIDByEvent(e)
-            let data = []
-            for (let i = 1; i <= this.dat.fields.length; i++) {
-                data.push($(_getDom(row_id).children('th')[i]).html())
-            }
-            // Insert row to the bottom of the table
-            this.insertRow([data],0,true)
-            // Add change to chang log
-            this._addChange(myTable.INSERT, data)
-            // Remove this row
-            $("#can-item[value="+row_id+"]").click()
-        })
-
-        $("#can-item[value="+uuid+"]").bind('click', (e) => {
-            _getDom(this._getRowIDByEvent(e)).remove()
-        })
+    insert(data, rowId = undefined) {
+        let row = new rowClass(this.dat, this, tableClass.INSERT)
+        row.append(data)
+        row.id = rowId
     }
-    
+
+    create() {
+        let row = new rowClass(this.dat, this, tableClass.CREATE)
+        row.create(1)
+    }
 
     searchTable(data) {
 
     }
 
+    append(row, pos) {
+        if (pos == 0 || this.isEmpty()) row.appendTo(_getDomId(this.dat._table, 'tbody'));
+        else _getDom(_getDomId(this.dat._table, 'tbody', 'tr:eq(' + (pos - 1) + ')')).before(row)
+    }
+
     commitChange() {
-        let serialize = (dat, data) => {
-            let serialized_data = {}
-            let ajaxDat = {}
-            for(let i=0;i<data.length;i++){
-                serialized_data[this.dat.keyname[i]] = data[i]
-            }
-            ajaxDat = {
-                type : dat.type,
-                url : dat.url,
-                dataType : "json",
-                data : JSON.stringify(serialized_data),
-            }
-            return ajaxDat
-        } 
-
-        let ajaxDat = {}
-
-        this._changeLog.forEach(c=>{
-            switch(c.type){
-                case myTable.INSERT : {
-                    ajaxDat = serialize(this._getAjaxDat(myTable.INSERT), c.data)
-                    break
-                }
-            }
-        })
-        console.log(ajaxDat)
-    }
-    
-
-    refreshTable() {
-
-    }
-
-    undoOperation() {
-
-    }
-
-    _addChange(type, data){
-        this._changeLog.push({
-            type: type,
-            data : data
+        // Merge Operation
+        this.changeLog.forEach(v => {
+            this.ajax.execute(v)
         })
     }
 
-    fetchTable(){
-        let _dat = this._getAjaxDat(myTable.QUERY)
-        $.ajax({
-            type: _dat.type,
-            url: _dat.url,
-            success: (data) => {
-                data.forEach(item => {
-                    let row = []
-                    for(let i=0;i<this.dat.keyname.length;i++){
-                        row.push(item[this.dat.keyname[i]])
-                    }
-                    this.insertRow([row])
-                })
+    clearTable() {
+        _getDom(_getDomId(this.dat._table, 'tbody')).children().remove()
+        this.rowList = []
+        this.length = 0
+    }
+
+    refresh() {
+        this.clearTable()
+        this.changeLog = []
+        this.fetchData()
+    }
+
+    fetchData() {
+        let reData = this.ajax.execute({type: myAjax.QUERY})
+        if (reData == null) alert('获取数据失败!')
+        else {
+            // if current table has parent table
+            if (!this.isParent) reData = reData[this.parent.field]
+            this.setData(reData)
+        }
+       
+    }
+
+    callTable(field, data){
+        this.tabs.forEach(tab=>{
+            if(!tab.table.isParent && tab.table.parent.table.uuid == this.uuid && tab.table.parent.field == field){
+                this.dismissTab()
+                tab.show()
+                tab.table.setData(data)
+                tab.active()
+                this.child = tab.table
             }
         })
     }
 
+    setData(data){
+        data.forEach(item => {
+            let data = []
+            for (let i = 0; i < this.dat.keyname.length; i++) {
+                data.push(item[this.dat.keyname[i]])
+            }
+            this.insert(data, item[this.dat.identifyKey])
+        });
+    }
+
+    dismissTab(){
+        if (this.child == null) return
+        for(let i=0;i<this.tabs.length;i++){
+            if(this.tabs[i].table.uuid == this.child.uuid){
+                this.tabs[i].table.dismissTab()
+                this.tabs[i].remove()
+                return
+            }
+        }
+    }
 }

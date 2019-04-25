@@ -29,3 +29,19 @@ function _getDateTime(timestamp){
     return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
 }
 
+function _getConstType(string){
+    switch(string){
+        case 'text' :return DataUnit.STRING
+        case 'percentage': return DataUnit.PERCENTAGE
+        case 'number' : return DataUnit.NUMBER
+        case 'childtable' : return DataUnit.CHILDTABLE
+        case 'notnull' : return DataUnit.NOTNULL
+        case 'insert' : return myAjax.INSERT
+        case 'delete' : return myAjax.DELETE
+        case 'query': return myAjax.QUERY
+        case 'modify': return myAjax.MODIFY 
+        case 'readonly':return DataUnit.READONLY
+    }
+}
+
+// export { _getDom, _getDomId, _getDateTime, _getConstType}

@@ -8,18 +8,20 @@ server.setblocking(False)
 client_list = []
 
 logger = logging.getLogger(__name__)
-event = threading.Event()
 q = queue.Queue()
 
 
 def start(db, config):
-    init_wechat(config)
+    # init_wechat(config)
     # print(config.FriendList)
     t_service = threading.Thread(target=conn, args=(db, config))
     t_service.start()
 
-    t_wechat = threading.Thread(target=wechat, args=(db, config))
-    t_wechat.start()
+    while True:
+        q.put('test msg')
+        time.sleep(1)
+    # t_wechat = threading.Thread(target=wechat, args=(db, config))
+    # t_wechat.start()
 
 
 def conn(db, config):
@@ -45,20 +47,13 @@ def conn(db, config):
 
         except BlockingIOError:
             time.sleep(1)
-            pass
-        readySndMsg = ''
-
-        if event.is_set():
-            readySndMsg = q.get()
-            event.clear()
 
         for client_socket, client_addr in client_list:
-            client_socket.send(bytes(readySndMsg, 'utf8'))
+            while not q.empty():
+                client_socket.send(bytes(q.get(), 'utf8'))
             try:
                 client_recv = client_socket.recv(1024)
                 if client_recv:
-                    # recv = client_recv.decode('utf8')
-                    # print("receive:{}>>>{}".format(client_addr, client_recv.decode('gbk')))
                     recv = json.loads(client_recv.decode('utf8'))
                     for f in config.FriendList:
                         if f['name'] == recv['name']:
@@ -95,7 +90,6 @@ def wechat(db, config):
             if u_from == "Me" and not config.echo:
                 return
             q.put(get_time(onlyTime=True) + '\n' + u_from + ':' + msg.text + '\n')
-            event.set()
     itchat.run()
 
 def getNickName(username, config):
