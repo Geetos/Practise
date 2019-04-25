@@ -1,0 +1,37 @@
+server:
+  enabled: false
+  port: 8081
+admin:
+  name: Admin LRS
+img:
+  folder: /img/
+file:
+  folder: /file/
+upload:
+  file:
+    folder: /file/
+  upload:
+  root:
+    folder: /usr/local/data
+user:
+  folder: /user/
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/projectmanager?characterEncoding=UTF-8
+    username: root
+    password: 123456
+    max-active: 20
+    max-idle: 8
+    min-idle: 8
+    initial-size: 10
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+    servlet:
+      content-type: text/html; charset=utf-8
+  template:
+    cache: false
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configLocation: classpath:mybatis/mybatis-config.xml

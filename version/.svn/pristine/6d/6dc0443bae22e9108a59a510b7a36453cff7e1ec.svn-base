@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.FactScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.FactSchedule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ct_scheduleid" property="ctScheduleid" jdbcType="INTEGER" />
+    <result column="already_startday" property="alreadyStartday" jdbcType="REAL" />
+    <result column="fact_startdate" property="factStartdate" jdbcType="TIMESTAMP" />
+    <result column="fact_enddate" property="factEnddate" jdbcType="TIMESTAMP" />
+    <result column="fact_initialdate" property="factInitialdate" jdbcType="TIMESTAMP" />
+    <result column="fact_finaldata" property="factFinaldata" jdbcType="TIMESTAMP" />
+    <result column="warranty_starttime" property="warrantyStarttime" jdbcType="TIMESTAMP" />
+    <result column="schedule_shpercent" property="scheduleShpercent" jdbcType="DECIMAL" />
+    <result column="schedule_fcpercent" property="scheduleFcpercent" jdbcType="DECIMAL" />
+    <result column="schedule_judement" property="scheduleJudement" jdbcType="VARCHAR" />
+    <result column="schedule_control" property="scheduleControl" jdbcType="DECIMAL" />
+    <result column="schedule_description" property="scheduleDescription" jdbcType="VARCHAR" />
+    <result column="schedule_ctdescription" property="scheduleCtdescription" jdbcType="VARCHAR" />
+    <result column="schedule_status" property="scheduleStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ct_scheduleid, already_startday, fact_startdate, fact_enddate, fact_initialdate, 
+    fact_finaldata, warranty_starttime, schedule_shpercent, schedule_fcpercent, schedule_judement, 
+    schedule_control, schedule_description, schedule_ctdescription, schedule_status
+  </sql><select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  select
+  <include refid="Base_Column_List" />
+  from dx_jf_ct_fact_schedule
+  where id = #{id,jdbcType=INTEGER}
+</select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_ct_fact_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.FactSchedule" >
+    insert into dx_jf_ct_fact_schedule (id, ct_scheduleid, already_startday, 
+      fact_startdate, fact_enddate, fact_initialdate, 
+      fact_finaldata, warranty_starttime, schedule_shpercent, 
+      schedule_fcpercent, schedule_judement, schedule_control, 
+      schedule_description, schedule_ctdescription, 
+      schedule_status)
+    values (#{id,jdbcType=INTEGER}, #{ctScheduleid,jdbcType=INTEGER}, #{alreadyStartday,jdbcType=REAL}, 
+      #{factStartdate,jdbcType=TIMESTAMP}, #{factEnddate,jdbcType=TIMESTAMP}, #{factInitialdate,jdbcType=TIMESTAMP}, 
+      #{factFinaldata,jdbcType=TIMESTAMP}, #{warrantyStarttime,jdbcType=TIMESTAMP}, #{scheduleShpercent,jdbcType=DECIMAL}, 
+      #{scheduleFcpercent,jdbcType=DECIMAL}, #{scheduleJudement,jdbcType=VARCHAR}, #{scheduleControl,jdbcType=DECIMAL}, 
+      #{scheduleDescription,jdbcType=VARCHAR}, #{scheduleCtdescription,jdbcType=VARCHAR}, 
+      #{scheduleStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.FactSchedule" >
+    insert into dx_jf_ct_fact_schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ctScheduleid != null" >
+        ct_scheduleid,
+      </if>
+      <if test="alreadyStartday != null" >
+        already_startday,
+      </if>
+      <if test="factStartdate != null" >
+        fact_startdate,
+      </if>
+      <if test="factEnddate != null" >
+        fact_enddate,
+      </if>
+      <if test="factInitialdate != null" >
+        fact_initialdate,
+      </if>
+      <if test="factFinaldata != null" >
+        fact_finaldata,
+      </if>
+      <if test="warrantyStarttime != null" >
+        warranty_starttime,
+      </if>
+      <if test="scheduleShpercent != null" >
+        schedule_shpercent,
+      </if>
+      <if test="scheduleFcpercent != null" >
+        schedule_fcpercent,
+      </if>
+      <if test="scheduleJudement != null" >
+        schedule_judement,
+      </if>
+      <if test="scheduleControl != null" >
+        schedule_control,
+      </if>
+      <if test="scheduleDescription != null" >
+        schedule_description,
+      </if>
+      <if test="scheduleCtdescription != null" >
+        schedule_ctdescription,
+      </if>
+      <if test="scheduleStatus != null" >
+        schedule_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ctScheduleid != null" >
+        #{ctScheduleid,jdbcType=INTEGER},
+      </if>
+      <if test="alreadyStartday != null" >
+        #{alreadyStartday,jdbcType=REAL},
+      </if>
+      <if test="factStartdate != null" >
+        #{factStartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factEnddate != null" >
+        #{factEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factInitialdate != null" >
+        #{factInitialdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factFinaldata != null" >
+        #{factFinaldata,jdbcType=TIMESTAMP},
+      </if>
+      <if test="warrantyStarttime != null" >
+        #{warrantyStarttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scheduleShpercent != null" >
+        #{scheduleShpercent,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleFcpercent != null" >
+        #{scheduleFcpercent,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleJudement != null" >
+        #{scheduleJudement,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleControl != null" >
+        #{scheduleControl,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleDescription != null" >
+        #{scheduleDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleCtdescription != null" >
+        #{scheduleCtdescription,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleStatus != null" >
+        #{scheduleStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.FactSchedule" >
+    update dx_jf_ct_fact_schedule
+    <set >
+      <if test="ctScheduleid != null" >
+        ct_scheduleid = #{ctScheduleid,jdbcType=INTEGER},
+      </if>
+      <if test="alreadyStartday != null" >
+        already_startday = #{alreadyStartday,jdbcType=REAL},
+      </if>
+      <if test="factStartdate != null" >
+        fact_startdate = #{factStartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factEnddate != null" >
+        fact_enddate = #{factEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factInitialdate != null" >
+        fact_initialdate = #{factInitialdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factFinaldata != null" >
+        fact_finaldata = #{factFinaldata,jdbcType=TIMESTAMP},
+      </if>
+      <if test="warrantyStarttime != null" >
+        warranty_starttime = #{warrantyStarttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scheduleShpercent != null" >
+        schedule_shpercent = #{scheduleShpercent,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleFcpercent != null" >
+        schedule_fcpercent = #{scheduleFcpercent,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleJudement != null" >
+        schedule_judement = #{scheduleJudement,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleControl != null" >
+        schedule_control = #{scheduleControl,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleDescription != null" >
+        schedule_description = #{scheduleDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleCtdescription != null" >
+        schedule_ctdescription = #{scheduleCtdescription,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleStatus != null" >
+        schedule_status = #{scheduleStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.FactSchedule" >
+    update dx_jf_ct_fact_schedule
+    set ct_scheduleid = #{ctScheduleid,jdbcType=INTEGER},
+      already_startday = #{alreadyStartday,jdbcType=REAL},
+      fact_startdate = #{factStartdate,jdbcType=TIMESTAMP},
+      fact_enddate = #{factEnddate,jdbcType=TIMESTAMP},
+      fact_initialdate = #{factInitialdate,jdbcType=TIMESTAMP},
+      fact_finaldata = #{factFinaldata,jdbcType=TIMESTAMP},
+      warranty_starttime = #{warrantyStarttime,jdbcType=TIMESTAMP},
+      schedule_shpercent = #{scheduleShpercent,jdbcType=DECIMAL},
+      schedule_fcpercent = #{scheduleFcpercent,jdbcType=DECIMAL},
+      schedule_judement = #{scheduleJudement,jdbcType=VARCHAR},
+      schedule_control = #{scheduleControl,jdbcType=DECIMAL},
+      schedule_description = #{scheduleDescription,jdbcType=VARCHAR},
+      schedule_ctdescription = #{scheduleCtdescription,jdbcType=VARCHAR},
+      schedule_status = #{scheduleStatus,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="findFactScheduleleByctScheduleid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_ct_fact_schedule
+    where ct_scheduleid = #{ctScheduleid,jdbcType=INTEGER}
+  </select>
+
+</mapper>

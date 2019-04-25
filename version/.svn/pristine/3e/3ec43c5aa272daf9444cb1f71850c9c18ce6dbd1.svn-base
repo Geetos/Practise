@@ -1,0 +1,127 @@
+package com.jxtele.projectmanage.controller;
+
+import com.alibaba.druid.util.StringUtils;
+import com.jxtele.projectmanage.annotation.Permission;
+import com.jxtele.projectmanage.controller.base.BaseController;
+import com.jxtele.projectmanage.entity.PermissionType;
+import com.jxtele.projectmanage.entity.TeamBuild;
+import com.jxtele.projectmanage.entity.Xmpercentage;
+import com.jxtele.projectmanage.entity.XmpercentageItem;
+import com.jxtele.projectmanage.service.XmpercentageItemService;
+import com.jxtele.projectmanage.service.XmpercentageService;
+import com.jxtele.projectmanage.service.impl.ProjectService;
+import com.jxtele.projectmanage.service.impl.TeamBuildService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping("/percentage")
+public class XmpercentageController extends BaseController {
+
+    private static final String qxurl = "percentage/list";
+    @Autowired
+    private XmpercentageService xmpercentageService;
+    @Autowired
+    private TeamBuildService teamBuildService;
+    @Autowired
+    private XmpercentageItemService xmpercentageItemService;
+    @Autowired
+    private ProjectService projectService;
+    /**
+     *增加项目提成单
+     * @param recode
+     * @return
+     */
+    @RequestMapping(value="/add",method= RequestMethod.GET)
+    @Permission(url = qxurl,type = PermissionType.ADD)
+    public String add(@ModelAttribute Xmpercentage recode,Model model){
+       if(!StringUtils.isEmpty(String.valueOf(recode.getProjectId()))){
+           XmPercentageList(recode.getProjectId());
+       }
+        Map<String,Object> map = new HashMap<String,Object>();
+       try {
+          Integer i =  xmpercentageService.insert(recode);
+          if(i>0){
+              list(model);
+          }
+        }catch(Exception e){
+           map.put("msg", "添加失败！");
+        }
+        return "page/percentage/list";
+    }
+    /**
+     * 查询提成分配数据
+     * @return
+     */
+    @RequestMapping(value="/list",method=RequestMethod.GET)
+    @Permission(url = qxurl,type = PermissionType.QUERY)
+    public ModelAndView list(Model model){
+        model.addAttribute("projects", projectService.findAllProject());
+        model.addAttribute("xmlist", xmpercentageService.selectAll());
+        return new ModelAndView("page/percentage/list");
+    }
+
+    /**
+     * 查询提成详细数据列表
+     */
+    @RequestMapping(value="/itemlist/{percentageId}",method=RequestMethod.GET)
+    @Permission(url = qxurl,type = PermissionType.QUERY)
+    public Object list(@PathVariable("percentageId") Integer percentageId, Model model){
+        List<XmpercentageItem> xmItemlist = xmpercentageItemService.selectByPercentId(percentageId);
+        model.addAttribute("xmItemlist", xmItemlist);
+        model.addAttribute("percentageId", percentageId);//添加时默认数据
+        return "page/percentage/itemList";
+    }
+    /**
+     * 删除提成项目
+     * @param id
+     * @return
+     */
+    @RequestMapping(value="/del/{id}",method=RequestMethod.GET)
+    @Permission(url = qxurl,type = PermissionType.DEL)
+    public Object del(@PathVariable Integer id,Model model){
+        if(id!=null){
+            //主表删除-关联子表
+            xmpercentageItemService.deleteByPercentageKey(id);
+        }
+        Integer delCount = xmpercentageService.deleteByPrimaryKey(id);
+        if(delCount>0){
+            list(model);
+        }
+        return delCount;
+    }
+
+    /**
+     * 修改
+     * @param record
+     * @return
+     */
+    @RequestMapping(value="/edit",method=RequestMethod.POST)
+    @Permission(url = qxurl,type = PermissionType.EDIT)
+    public Object edit(@ModelAttribute Xmpercentage record){
+        return xmpercentageService.updateByPrimaryKey(record);
+    }
+
+    public void XmPercentageList(Integer id){
+        //创建项目提成分配时，根据项目参与人员自动添加项目提成明细列表
+        List<TeamBuild> teams = teamBuildService.findByProjId(id);
+        for(TeamBuild team:teams){
+            XmpercentageItem item =new XmpercentageItem();
+            item.setUserId(team.getSysUserid());
+            item.setStartTime(item.getStartTime());
+            item.setEndTime(item.getEndTime());
+            xmpercentageItemService.insert(item);
+        }
+    }
+
+}

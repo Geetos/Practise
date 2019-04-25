@@ -1,0 +1,48 @@
+package com.jxtele.projectmanage.service.impl;
+
+import com.jxtele.projectmanage.dao.XmpercentageItemMapper;
+import com.jxtele.projectmanage.entity.XmpercentageItem;
+import com.jxtele.projectmanage.service.XmpercentageItemService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class XmpercentageItemServiceImpl implements XmpercentageItemService {
+    @Autowired
+    XmpercentageItemMapper xmpercentageItemMapper;
+    @Override
+    public int deleteByPrimaryKey(Integer id) {
+        return xmpercentageItemMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int insert(XmpercentageItem record) {
+        return xmpercentageItemMapper.insert(record);
+    }
+
+    @Override
+    public int insertSelective(XmpercentageItem record) {
+        return xmpercentageItemMapper.insertSelective(record);
+    }
+
+    @Override
+    public XmpercentageItem selectByPrimaryKey(Integer id) {
+        return xmpercentageItemMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<XmpercentageItem> selectByPercentId(Integer percentageId){return xmpercentageItemMapper.selectByPercentId(percentageId);}
+
+    @Override
+    public int updateByPrimaryKeySelective(XmpercentageItem record){return xmpercentageItemMapper.updateByPrimaryKeySelective(record);}
+
+    @Override
+    public int updateByPrimaryKey(XmpercentageItem record){
+        return xmpercentageItemMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public int deleteByPercentageKey(Integer percentageId){return xmpercentageItemMapper.deleteByPercentageKey(percentageId);}
+}

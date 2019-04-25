@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.EvaluationMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.Evaluation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="range_proportion" property="rangeProportion" jdbcType="DECIMAL" />
+    <result column="range_score" property="rangeScore" jdbcType="DECIMAL" />
+    <result column="schedule_proportion" property="scheduleProportion" jdbcType="DECIMAL" />
+    <result column="schedule_score" property="scheduleScore" jdbcType="DECIMAL" />
+    <result column="payback_proportion" property="paybackProportion" jdbcType="DECIMAL" />
+    <result column="payback_score" property="paybackScore" jdbcType="DECIMAL" />
+    <result column="worhday_proportion" property="worhdayProportion" jdbcType="DECIMAL" />
+    <result column="worhday_score" property="worhdayScore" jdbcType="DECIMAL" />
+    <result column="cost_score" property="costScore" jdbcType="DECIMAL" />
+    <result column="communicate_proportion" property="communicateProportion" jdbcType="DECIMAL" />
+    <result column="communicate_score" property="communicateScore" jdbcType="DECIMAL" />
+    <result column="data_proportion" property="dataProportion" jdbcType="DECIMAL" />
+    <result column="datacheck_proportion" property="datacheckProportion" jdbcType="DECIMAL" />
+    <result column="document_proportion" property="documentProportion" jdbcType="DECIMAL" />
+    <result column="quality_score" property="qualityScore" jdbcType="DECIMAL" />
+    <result column="high_risk" property="highRisk" jdbcType="DECIMAL" />
+    <result column="mid_risk" property="midRisk" jdbcType="DECIMAL" />
+    <result column="low_risk" property="lowRisk" jdbcType="DECIMAL" />
+    <result column="risk_score" property="riskScore" jdbcType="DECIMAL" />
+    <result column="arrival_proportion" property="arrivalProportion" jdbcType="DECIMAL" />
+    <result column="contract_proportion" property="contractProportion" jdbcType="DECIMAL" />
+    <result column="purchase_score" property="purchaseScore" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_id, range_proportion, range_score, schedule_proportion, schedule_score, 
+    payback_proportion, payback_score, worhday_proportion, worhday_score, cost_score, 
+    communicate_proportion, communicate_score, data_proportion, datacheck_proportion, 
+    document_proportion, quality_score, high_risk, mid_risk, low_risk, risk_score, arrival_proportion, 
+    contract_proportion, purchase_score
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_project_evaluation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_project_evaluation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.Evaluation" >
+    insert into dx_jf_project_evaluation (id, project_id, range_proportion, 
+      range_score, schedule_proportion, schedule_score, 
+      payback_proportion, payback_score, worhday_proportion, 
+      worhday_score, cost_score, communicate_proportion, 
+      communicate_score, data_proportion, datacheck_proportion, 
+      document_proportion, quality_score, high_risk, 
+      mid_risk, low_risk, risk_score, 
+      arrival_proportion, contract_proportion, 
+      purchase_score)
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{rangeProportion,jdbcType=DECIMAL}, 
+      #{rangeScore,jdbcType=DECIMAL}, #{scheduleProportion,jdbcType=DECIMAL}, #{scheduleScore,jdbcType=DECIMAL}, 
+      #{paybackProportion,jdbcType=DECIMAL}, #{paybackScore,jdbcType=DECIMAL}, #{worhdayProportion,jdbcType=DECIMAL}, 
+      #{worhdayScore,jdbcType=DECIMAL}, #{costScore,jdbcType=DECIMAL}, #{communicateProportion,jdbcType=DECIMAL}, 
+      #{communicateScore,jdbcType=DECIMAL}, #{dataProportion,jdbcType=DECIMAL}, #{datacheckProportion,jdbcType=DECIMAL}, 
+      #{documentProportion,jdbcType=DECIMAL}, #{qualityScore,jdbcType=DECIMAL}, #{highRisk,jdbcType=DECIMAL}, 
+      #{midRisk,jdbcType=DECIMAL}, #{lowRisk,jdbcType=DECIMAL}, #{riskScore,jdbcType=DECIMAL}, 
+      #{arrivalProportion,jdbcType=DECIMAL}, #{contractProportion,jdbcType=DECIMAL}, 
+      #{purchaseScore,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.Evaluation" >
+    insert into dx_jf_project_evaluation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="rangeProportion != null" >
+        range_proportion,
+      </if>
+      <if test="rangeScore != null" >
+        range_score,
+      </if>
+      <if test="scheduleProportion != null" >
+        schedule_proportion,
+      </if>
+      <if test="scheduleScore != null" >
+        schedule_score,
+      </if>
+      <if test="paybackProportion != null" >
+        payback_proportion,
+      </if>
+      <if test="paybackScore != null" >
+        payback_score,
+      </if>
+      <if test="worhdayProportion != null" >
+        worhday_proportion,
+      </if>
+      <if test="worhdayScore != null" >
+        worhday_score,
+      </if>
+      <if test="costScore != null" >
+        cost_score,
+      </if>
+      <if test="communicateProportion != null" >
+        communicate_proportion,
+      </if>
+      <if test="communicateScore != null" >
+        communicate_score,
+      </if>
+      <if test="dataProportion != null" >
+        data_proportion,
+      </if>
+      <if test="datacheckProportion != null" >
+        datacheck_proportion,
+      </if>
+      <if test="documentProportion != null" >
+        document_proportion,
+      </if>
+      <if test="qualityScore != null" >
+        quality_score,
+      </if>
+      <if test="highRisk != null" >
+        high_risk,
+      </if>
+      <if test="midRisk != null" >
+        mid_risk,
+      </if>
+      <if test="lowRisk != null" >
+        low_risk,
+      </if>
+      <if test="riskScore != null" >
+        risk_score,
+      </if>
+      <if test="arrivalProportion != null" >
+        arrival_proportion,
+      </if>
+      <if test="contractProportion != null" >
+        contract_proportion,
+      </if>
+      <if test="purchaseScore != null" >
+        purchase_score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="rangeProportion != null" >
+        #{rangeProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="rangeScore != null" >
+        #{rangeScore,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleProportion != null" >
+        #{scheduleProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleScore != null" >
+        #{scheduleScore,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackProportion != null" >
+        #{paybackProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackScore != null" >
+        #{paybackScore,jdbcType=DECIMAL},
+      </if>
+      <if test="worhdayProportion != null" >
+        #{worhdayProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="worhdayScore != null" >
+        #{worhdayScore,jdbcType=DECIMAL},
+      </if>
+      <if test="costScore != null" >
+        #{costScore,jdbcType=DECIMAL},
+      </if>
+      <if test="communicateProportion != null" >
+        #{communicateProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="communicateScore != null" >
+        #{communicateScore,jdbcType=DECIMAL},
+      </if>
+      <if test="dataProportion != null" >
+        #{dataProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="datacheckProportion != null" >
+        #{datacheckProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="documentProportion != null" >
+        #{documentProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="qualityScore != null" >
+        #{qualityScore,jdbcType=DECIMAL},
+      </if>
+      <if test="highRisk != null" >
+        #{highRisk,jdbcType=DECIMAL},
+      </if>
+      <if test="midRisk != null" >
+        #{midRisk,jdbcType=DECIMAL},
+      </if>
+      <if test="lowRisk != null" >
+        #{lowRisk,jdbcType=DECIMAL},
+      </if>
+      <if test="riskScore != null" >
+        #{riskScore,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalProportion != null" >
+        #{arrivalProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="contractProportion != null" >
+        #{contractProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="purchaseScore != null" >
+        #{purchaseScore,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.Evaluation" >
+    update dx_jf_project_evaluation
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="rangeProportion != null" >
+        range_proportion = #{rangeProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="rangeScore != null" >
+        range_score = #{rangeScore,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleProportion != null" >
+        schedule_proportion = #{scheduleProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduleScore != null" >
+        schedule_score = #{scheduleScore,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackProportion != null" >
+        payback_proportion = #{paybackProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackScore != null" >
+        payback_score = #{paybackScore,jdbcType=DECIMAL},
+      </if>
+      <if test="worhdayProportion != null" >
+        worhday_proportion = #{worhdayProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="worhdayScore != null" >
+        worhday_score = #{worhdayScore,jdbcType=DECIMAL},
+      </if>
+      <if test="costScore != null" >
+        cost_score = #{costScore,jdbcType=DECIMAL},
+      </if>
+      <if test="communicateProportion != null" >
+        communicate_proportion = #{communicateProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="communicateScore != null" >
+        communicate_score = #{communicateScore,jdbcType=DECIMAL},
+      </if>
+      <if test="dataProportion != null" >
+        data_proportion = #{dataProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="datacheckProportion != null" >
+        datacheck_proportion = #{datacheckProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="documentProportion != null" >
+        document_proportion = #{documentProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="qualityScore != null" >
+        quality_score = #{qualityScore,jdbcType=DECIMAL},
+      </if>
+      <if test="highRisk != null" >
+        high_risk = #{highRisk,jdbcType=DECIMAL},
+      </if>
+      <if test="midRisk != null" >
+        mid_risk = #{midRisk,jdbcType=DECIMAL},
+      </if>
+      <if test="lowRisk != null" >
+        low_risk = #{lowRisk,jdbcType=DECIMAL},
+      </if>
+      <if test="riskScore != null" >
+        risk_score = #{riskScore,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalProportion != null" >
+        arrival_proportion = #{arrivalProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="contractProportion != null" >
+        contract_proportion = #{contractProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="purchaseScore != null" >
+        purchase_score = #{purchaseScore,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.Evaluation" >
+    update dx_jf_project_evaluation
+    set project_id = #{projectId,jdbcType=INTEGER},
+      range_proportion = #{rangeProportion,jdbcType=DECIMAL},
+      range_score = #{rangeScore,jdbcType=DECIMAL},
+      schedule_proportion = #{scheduleProportion,jdbcType=DECIMAL},
+      schedule_score = #{scheduleScore,jdbcType=DECIMAL},
+      payback_proportion = #{paybackProportion,jdbcType=DECIMAL},
+      payback_score = #{paybackScore,jdbcType=DECIMAL},
+      worhday_proportion = #{worhdayProportion,jdbcType=DECIMAL},
+      worhday_score = #{worhdayScore,jdbcType=DECIMAL},
+      cost_score = #{costScore,jdbcType=DECIMAL},
+      communicate_proportion = #{communicateProportion,jdbcType=DECIMAL},
+      communicate_score = #{communicateScore,jdbcType=DECIMAL},
+      data_proportion = #{dataProportion,jdbcType=DECIMAL},
+      datacheck_proportion = #{datacheckProportion,jdbcType=DECIMAL},
+      document_proportion = #{documentProportion,jdbcType=DECIMAL},
+      quality_score = #{qualityScore,jdbcType=DECIMAL},
+      high_risk = #{highRisk,jdbcType=DECIMAL},
+      mid_risk = #{midRisk,jdbcType=DECIMAL},
+      low_risk = #{lowRisk,jdbcType=DECIMAL},
+      risk_score = #{riskScore,jdbcType=DECIMAL},
+      arrival_proportion = #{arrivalProportion,jdbcType=DECIMAL},
+      contract_proportion = #{contractProportion,jdbcType=DECIMAL},
+      purchase_score = #{purchaseScore,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByProjectKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_project_evaluation
+    where project_id = #{projectId,jdbcType=INTEGER}
+  </select>
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.FileCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.FileCheck" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="project_discription" property="projectDiscription" jdbcType="VARCHAR" />
+    <result column="checker" property="checker" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="value_score" property="valueScore" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_name, project_id, project_discription, checker, check_time, value_score
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_file_check
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_file_check
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.jxtele.projectmanage.entity.FileCheck" >
+    insert into dx_jf_file_check (id, project_name, project_id, 
+      project_discription, checker, check_time, 
+      value_score)
+    values (#{id,jdbcType=INTEGER}, #{projectName,jdbcType=VARCHAR}, #{projectId,jdbcType=INTEGER}, 
+      #{projectDiscription,jdbcType=VARCHAR}, #{checker,jdbcType=VARCHAR}, #{checkTime,jdbcType=TIMESTAMP}, 
+      #{valueScore,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jxtele.projectmanage.entity.FileCheck" >
+    insert into dx_jf_file_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectName != null" >
+        project_name,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="projectDiscription != null" >
+        project_discription,
+      </if>
+      <if test="checker != null" >
+        checker,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="valueScore != null" >
+        value_score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="projectDiscription != null" >
+        #{projectDiscription,jdbcType=VARCHAR},
+      </if>
+      <if test="checker != null" >
+        #{checker,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="valueScore != null" >
+        #{valueScore,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.FileCheck" >
+    update dx_jf_file_check
+    <set >
+      <if test="projectName != null" >
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="projectDiscription != null" >
+        project_discription = #{projectDiscription,jdbcType=VARCHAR},
+      </if>
+      <if test="checker != null" >
+        checker = #{checker,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="valueScore != null" >
+        value_score = #{valueScore,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.FileCheck" >
+    update dx_jf_file_check
+    set project_name = #{projectName,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=INTEGER},
+      project_discription = #{projectDiscription,jdbcType=VARCHAR},
+      checker = #{checker,jdbcType=VARCHAR},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      value_score = #{valueScore,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_file_check
+    where project_id = #{projectId,jdbcType=INTEGER}
+    order by check_time desc
+  </select>
+  <select id="selectlastByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_file_check
+    where project_id = #{projectId,jdbcType=INTEGER}
+    order by check_time desc limit 1
+  </select>
+</mapper>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/css-head :: css-head">
+</head>
+<style>
+    textarea{
+        width:100%;
+        height:100px;
+    }
+
+    .file {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+    .file input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+    .file:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+    }
+
+    .chk_1{
+        display: none;
+    }
+    .chk_1 + label {
+        background-color: #FFF;
+        border: 1px solid #C1CACA;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+        padding: 9px;
+        border-radius: 5px;
+        display: inline-block;
+        position: relative;
+        margin-right: 30px;
+    }
+    .chk_1 + label:active {
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .chk_1:checked + label {
+        background-color: #ECF2F7;
+        border: 1px solid #92A1AC;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+        color: #243441;
+    }
+
+    .chk_1:checked + label:after {
+        content: '\2714';
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        color: #758794;
+        width: 100%;
+        text-align: center;
+        font-size: 1.4em;
+        padding: 1px 0 0 0;
+        vertical-align: text-top;
+    }
+    div.cbp label.font{
+        text-align: center;
+        font-size: 1.4em;
+        vertical-align: text-top;
+        margin-top: -15px;
+        margin-left: -10px;
+    }
+    #ProjList{
+        display:
+        overflow-scrolling: auto;
+        position: absolute;
+    }
+</style>
+<body>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        <small th:text="${session.SESSION_ProjectName}">项目</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+        <li class="active">项目资料管理</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">售中项目资料检查清单表</h3>
+            <br><br>
+            <input type="hidden" name="fid" th:value="${fileId}"/>
+            <input type="hidden" id="name" th:value="${session.SESSION_USER.username}">
+            <button th:if="${QX.add == '1' && QX.query == '1'}" class="btn btn-success btn-sm" id="addStandardday"><i class="fa fa-plus"></i> &nbsp;&nbsp;添加检查清单项</button>
+        </div>
+        <!-- /.box-header -->
+
+        <div class="table-body">
+            <div class="box-body">
+                <table id="percentList" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>资料名称</th>
+                        <th>资料类型</th>
+                        <th>是否符合要求</th>
+                        <th>审核人</th>
+                        <th>备注</th>
+
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr th:if="${QX.query == '1'}" th:each="filecheckitem,stat :${filecheckitems}">
+                        <td th:text="${stat.count}">1</td>
+                        <td th:text="${filecheckitem.checkName}"></td>
+                        <td th:text="${filecheckitem.filetype}"></td>
+                        <td th:text="${filecheckitem.checkSituation}"></td>
+                        <td th:text="${filecheckitem.checker}"></td>
+                        <td th:text="${filecheckitem.remark}"></td>
+                        <td>
+                            <span data-toggle="tooltip" title="资料检查清单编辑"
+                                  th:if="${QX.edit == '1'}" class="btn btn-xs btn-info" th:onclick="'editStandardday(\''+${filecheckitem.id}+'\',
+                              \''+${filecheckitem.fileId}+'\',
+                              \''+${filecheckitem.filetype}+'\',
+                              \''+${filecheckitem.checkSituation}+'\',
+                              \''+${filecheckitem.remark}+'\',
+                              \''+${filecheckitem.checkName}+'\',
+                              \''+${filecheckitem.checker}+'\');'">
+                            <i class="fa fa-edit">报审/报验&nbsp;</i> </span>
+                        </td>
+                    </tr>
+                    <tr th:unless="${QX.query == '1'}" >
+                        <td colspan="7" align="center">
+                            <h2>此用户无权限查看该页面</h2>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade bs-example-modal-lg" id="standarydayModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title text-center" id="usermodelHead">添加资料审核</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <table id="project" class="table table table-hover table-striped">
+                        <input type="hidden" name="id" value=""/>
+                        <input type="hidden" name="url" value=""/>
+                        <input type="hidden" name="file_id" th:value="${fileId}"/>
+                        <input type="hidden" name="projectName" th:value="${projectName}"/>
+                        <input type="hidden" name="checker" th:value="${session.SESSION_USER.username}"/>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="check_name" class="col-sm-2 control-label">资料名称</label>
+                                    <div class="col-sm-10">
+                                        <input name="check_name"  id="check_name" class="form-control"  placeholder="项目名称">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="filetype" class="col-sm-2 control-label">资料类型</label>
+                                    <div class="col-sm-10">
+                                        <input type="text"  class="form-control" name="filetype"
+                                                                  id="filetype" placeholder="资料类型">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="remark" class="col-sm-2 control-label">备注</label>
+                                    <div class="col-sm-10">
+                                        <input type="text"  class="form-control" name="remark"
+                                               id="remark" placeholder="备注">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="check_situation" class="col-sm-2 control-label">是否符合</label>
+                                    <div class="col-sm-10">
+                                            <select class="form-control" name="check_situation" id="check_situation">
+                                                <option value="符合">符合</option>
+                                                <option value="不符合">不符合</option>
+                                            </select>
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-success" id="standardaySubmit">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.core.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.excheck.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/dist/js/adminlte.min.js}"></script>
+<script th:src="@{/js/path.js}"></script>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/daterangepicker.css}">
+<script th:src="@{/js/moment.js}"></script>
+<script th:src="@{/js/daterangepicker.js}"></script>
+<script th:inline="javascript">
+    $(function() {
+        //提示框
+        $("[data-toggle='tooltip']").tooltip();
+        //表格分页
+        $('#percentList').DataTable({
+            "scrollX": true,
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            "pagingType": "full_numbers",
+            "pageLength": 54,
+            "oLanguage": {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "对不起，查询不到任何相关数据",
+                "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_条记录",
+                "sInfoEmtpy": "找不到相关数据",
+                "sInfoFiltered": "数据表中共为 _MAX_ 条记录)",
+                "sProcessing": "正在加载中...",
+                "sSearch": "搜索",
+                "oPaginate": {
+                    "sFirst": "第一页",
+                    "sPrevious": " 上一页 ",
+                    "sNext": " 下一页 ",
+                    "sLast": " 最后一页 "
+                },
+            }
+        });
+
+    });
+    //添加检查清单
+    $("#addStandardday").click(function () {
+        var fid = $("input[name='fid']").val();
+        standarddayyModelData(_ctx +"/filecheckitem/add","添加项目检查清单",null,fid,null,null,null,null);
+        $("#standarydayModal").modal("show");
+    });
+    //修改
+    function editStandardday(id,fileId,filetype,checkSituation,remark,checkName,checker){
+        standarddayyModelData(_ctx +"/filecheckitem/edit","审核项目检查清单",id,fileId,filetype,checkSituation,remark,checkName,checker);
+        $("#standarydayModal").modal("show");
+    }
+    function standarddayyModelData(url,title,id,file_id,filetype,check_situation,remark,check_name,checker){
+        $("input[name='url']").val(url);
+        $("#usermodelHead").text(title);
+        $("input[name='id']").val(id);
+        $("input[name='file_id']").val(file_id);
+        $("input[name='filetype']").val(filetype);
+        $("#check_situation").val(check_situation);
+        $("input[name='remark']").val(remark);
+        $("input[name='check_name']").val(check_name);
+        // $("input[name='checker']").val(checker);
+    }
+    //确认按钮
+    $("#standardaySubmit").click(function(){
+        var url = $("input[name='url']").val();
+        var id = $("input[name='id']").val();
+        var file_id = $("input[name='file_id']").val();
+        var filetype = $("input[name='filetype']").val();
+        var check_situation = $("#check_situation").val();
+        var remark = $("input[name='remark']").val();
+        var check_name = $("input[name='check_name']").val();
+        var checker =  $("input[name='checker']").val();
+        var checkTime = new Date().format("yyyy-MM-dd");
+        $.ajax({
+            type:"post",
+            url:url,
+            cache:false,
+            dataType:"json",
+            data:{
+                id:id,
+                fileId:file_id,
+                filetype:filetype,
+                checkTime:new Date().getTime(),
+                checkSituation:check_situation,
+                checkName:check_name,
+                remark:remark,
+                checker:checker
+            },
+            success:function(data){
+                if(data.status == 'success'){
+                    $("#standarydayModal").modal("hide");
+                    window.location.href=window.location.href;
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    });
+    //查询
+    function selectStandardday(id) {
+        window.location.href = _ctx + "/filecheckitem/list/" +id;
+    }
+    function delStandardday(id){
+        if (confirm("你确定要删除工日吗？")) {
+            $.ajax({
+                type: "GET",
+                url: _ctx + "/filecheck/del/"+ id,
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    if (data.status == 'success') {
+                        window.location.href = window.location.href;
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+    }
+</script>

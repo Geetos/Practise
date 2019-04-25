@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/css-head :: css-head">
+    <meta charset="UTF-8">
+</head>
+<style>
+    .table-hide{
+        visibility: hidden;
+    }
+</style>
+<body>
+<section class="content-header">
+    <h1> 项目资金明细
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 项目管理</a></li>
+        <li class="active">资金管理</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <div class="card">
+                <h5 class="card-header">资金基本信息</h5>
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <h3 class="box-title">项目资金明细</h3>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>合同金额</th>
+                    <th>商品采购成本</th>
+                    <th>转包实施成本</th>
+                    <th>项目利润率</th>
+                    <th>已回款金额</th>
+                    <th>回款比例</th>
+                    <!--<th>回款次数</th>-->
+                    <th>项目合同回款要求</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="money-table-tr">
+                    <th id="count"></th>
+                    <th id="contractMoney"></th>
+                    <th id="subcontractingCost"></th>
+                    <th id="costMoney"></th>
+                    <th id="paybackMoney"></th>
+                    <th id="profitMargin"></th>
+                    <th id="paybackRatio"></th>
+                    <th id="reamek"></th>
+                </tr>
+                </tbody>
+            </table>
+            <h3 class="box-title">回款记录</h3>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>回款金额</th>
+                    <th>回款时间</th>
+                </tr>
+                </thead>
+                <tbody id="tbody-money-item">
+                <tr id="tr-money-item" class="table-hide">
+                    <td id="item-count"></td>
+                    <td id="item-money">contract money</td>
+                    <td id="item-time">cost Money</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+<!-- 新增或修改的模态框 -->
+<div class="modal fade bs-example-modal-lg" id="moneyModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title text-center" id="moneymodelHead">添加项目</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <table id="project_money" class="table table table-hover table-striped">
+                        <input type="hidden" name="id" value=""/>
+                        <input type="hidden" name="user_id" value=""/>
+                        <input type="hidden" name="register_time" value=""/>
+                        <input type="hidden" name="url" value=""/>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="contract_money" class="col-sm-2 control-label">合同金额</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="contract_money" value=""
+                                               id="contract_money" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="cost_money" class="col-sm-2 control-label">商品采购成本</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="cost_money" value=""
+                                               id="cost_money" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="subcontracting_cost" class="col-sm-2 control-label">转包实施成本</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="subcontracting_cost" value=""
+                                               id="subcontracting_cost" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <label for="project_profit" class="col-sm-2 control-label">项目利润率</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="project_profit" value=""
+                                           id="project_profit" placeholder="">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="project_industry" class="col-sm-2 control-label">已回款金额</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="payback_money" value=""
+                                               id="payback_money" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="project_Subscriber" class="col-sm-2 control-label">项目合同回款要求</label>
+                                    <div class="col-sm-10">
+                                        <textfield type="text" class="form-control" name="remark" value=""
+                                                   id="remark" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-success" id="moneySubmit">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.core.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.excheck.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/dist/js/adminlte.min.js}"></script>
+<script th:src="@{/js/path.js}"></script>
+<script>
+    var data;
+    var project_id = sessionStorage.getItem("project_id");
+   // var money_info_list=['costMoney','contractMoney','paybackMoney','profitMargin','reamek','paybackRatio']
+    $.get('/moneyinfo/query/'+project_id,function (data) {
+        console.log(data)
+        for (var key in data){
+            $("#"+key).html(data[key])
+        }
+        for (var item in data['moneyInfoItems']){
+            var new_table = $("#tr-money-item").clone()
+            new_table.appendTo("#tbody-money-item");
+            var count = 0;
+            for(var key in item){
+                new_table.children("#count").html(count)
+                new_table.children('#item-money').html(item['paybackMoney'])
+                new_table.children('#item-time').html(getDateTime((item['paybackDate'])))
+                count += 1
+            }
+            new_table.attr("visibility","visible")
+        }
+
+    })
+
+    function getDateTime(timestamp){
+
+        var datetime = new Date();
+        datetime.setTime(timestamp);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth()+1;
+        var date = datetime.getDate();
+        var hour = datetime.getHours();
+        var minute = datetime.getMinutes();
+        var second = datetime.getSeconds();
+        var msecond = datetime.getMilliseconds();
+        return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+
+    }
+
+
+</script>

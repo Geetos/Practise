@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.IntegralItemMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.IntegralItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="integral_id" property="integralId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="integral" property="integral" jdbcType="DECIMAL" />
+    <result column="integraltime" property="integraltime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, integral_id, user_id, name, integral, integraltime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_integral_distribution_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_integral_distribution_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.IntegralItem" >
+    insert into dx_jf_integral_distribution_item (id, integral_id, user_id, 
+      name, integral, integraltime
+      )
+    values (#{id,jdbcType=INTEGER}, #{integralId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{integral,jdbcType=DECIMAL}, #{integraltime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.IntegralItem" >
+    insert into dx_jf_integral_distribution_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="integralId != null" >
+        integral_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="integral != null" >
+        integral,
+      </if>
+      <if test="integraltime != null" >
+        integraltime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="integralId != null" >
+        #{integralId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="integral != null" >
+        #{integral,jdbcType=DECIMAL},
+      </if>
+      <if test="integraltime != null" >
+        #{integraltime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.IntegralItem" >
+    update dx_jf_integral_distribution_item
+    <set >
+      <if test="integralId != null" >
+        integral_id = #{integralId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="integral != null" >
+        integral = #{integral,jdbcType=DECIMAL},
+      </if>
+      <if test="integraltime != null" >
+        integraltime = #{integraltime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.IntegralItem" >
+    update dx_jf_integral_distribution_item
+    set integral_id = #{integralId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      integral = #{integral,jdbcType=DECIMAL},
+      integraltime = #{integraltime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findIntegralItemByIntegralId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_integral_distribution_item
+    where integral_id = #{integralId,jdbcType=INTEGER}
+  </select>
+</mapper>

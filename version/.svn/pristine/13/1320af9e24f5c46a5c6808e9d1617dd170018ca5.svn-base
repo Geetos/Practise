@@ -1,0 +1,47 @@
+package com.jxtele.projectmanage.entity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+
+public class MoneyInfoItem {
+    private Integer id;
+
+    private Integer moneyInfoid;
+
+    private Date paybackDate;
+
+    private BigDecimal paytimeMoney;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getMoneyInfoid() {
+        return moneyInfoid;
+    }
+
+    public void setMoneyInfoid(Integer moneyInfoid) {
+        this.moneyInfoid = moneyInfoid;
+    }
+
+    public Date getPaybackDate() {
+        return paybackDate;
+    }
+
+    public void setPaybackDate(Date paybackDate) {
+        this.paybackDate = paybackDate;
+    }
+
+    public BigDecimal getPaytimeMoney() {
+        return paytimeMoney;
+    }
+
+    public void setPaytimeMoney(BigDecimal paytimeMoney) {
+        this.paytimeMoney = paytimeMoney;
+    }
+}

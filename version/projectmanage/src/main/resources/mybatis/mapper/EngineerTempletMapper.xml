@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.EngineerTempletMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.EngineerTemplet" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creatime" property="creatime" jdbcType="TIMESTAMP" />
+    <result column="manager" property="manager" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, project_name, status, creatime, manager, project_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_engineer_templet
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_engineer_templet
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.EngineerTemplet" >
+    insert into dx_jf_engineer_templet (id, user_id, project_name, 
+      status, creatime, manager, 
+      project_id)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{projectName,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{creatime,jdbcType=TIMESTAMP}, #{manager,jdbcType=VARCHAR}, 
+      #{projectId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.EngineerTemplet" >
+    insert into dx_jf_engineer_templet
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="projectName != null" >
+        project_name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="creatime != null" >
+        creatime,
+      </if>
+      <if test="manager != null" >
+        manager,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creatime != null" >
+        #{creatime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="manager != null" >
+        #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.EngineerTemplet" >
+    update dx_jf_engineer_templet
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="projectName != null" >
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creatime != null" >
+        creatime = #{creatime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="manager != null" >
+        manager = #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.EngineerTemplet" >
+    update dx_jf_engineer_templet
+    set user_id = #{userId,jdbcType=INTEGER},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      creatime = #{creatime,jdbcType=TIMESTAMP},
+      manager = #{manager,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_engineer_templet
+    where user_id = #{UserId,jdbcType=INTEGER}
+  </select>
+
+
+  <insert id="bathSave" parameterType="list">
+    insert into dx_jf_engineer_templet(
+    project_id,
+    user_id,
+    project_name,
+    creatime,
+    manager
+    )values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.project_id},
+      #{item.user_id},
+      #{item.project_name},
+      #{item.creatime},
+      #{item.manager}
+      )
+    </foreach>
+  </insert>
+</mapper>

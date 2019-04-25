@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/css-head :: css-head">
+</head>
+<style>
+    textarea{
+        width:100%;
+        height:100px;
+    }
+
+    .file {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+    .file input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+    .file:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+    }
+
+    .chk_1{
+        display: none;
+    }
+    .chk_1 + label {
+        background-color: #FFF;
+        border: 1px solid #C1CACA;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+        padding: 9px;
+        border-radius: 5px;
+        display: inline-block;
+        position: relative;
+        margin-right: 30px;
+    }
+    .chk_1 + label:active {
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .chk_1:checked + label {
+        background-color: #ECF2F7;
+        border: 1px solid #92A1AC;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+        color: #243441;
+    }
+
+    .chk_1:checked + label:after {
+        content: '\2714';
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        color: #758794;
+        width: 100%;
+        text-align: center;
+        font-size: 1.4em;
+        padding: 1px 0 0 0;
+        vertical-align: text-top;
+    }
+    div.cbp label.font{
+        text-align: center;
+        font-size: 1.4em;
+        vertical-align: text-top;
+        margin-top: -15px;
+        margin-left: -10px;
+    }
+    #ProjList{
+        display:
+        overflow-scrolling: auto;
+        position: absolute;
+    }
+</style>
+<body>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        <small  th:text="${session.SESSION_ProjectName}"></small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+        <li class="active">项目整体评价</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">项目整体评价</h3>
+            <br><br>
+            <button th:if="${QX.add == '1' && QX.query == '1'}" class="btn btn-success btn-sm" id="editStandarDay"><i class="fa fa-dashboard"></i> &nbsp;&nbsp;编辑项目整体评价</button>
+        </div>
+        <div class="table-body">
+            <div class="box-body">
+                <table id="percentList" class="table table-bordered table-striped">
+                    <!--<thead>-->
+                    <tr>
+                        <th>序号</th><td>1</td>
+                        <th>范围正式确认比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>范围正式确认得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <tr>
+                        <th>进度正常比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>进度评定得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>回款比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <tr>
+                        <th>回款得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>工日使用控制比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>工日使用控制得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <tr>
+                        <th>成本管理得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>有效沟通比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>有效沟通得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <tr>
+                        <th>资料准备完成率</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>资料核查合格率</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>文档处理率</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <tr>
+                        <th>质量管理得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>高风险比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>中风险比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <tr>
+                        <th>低风险比例</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>风险管理得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>到货正常率</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <tr>
+                        <th>合同签订合理率</th><td th:text="${evaluations.rangeProportion}"></td>
+                        <th>采购管理得分</th><td th:text="${evaluations.rangeProportion}"></td>
+                    </tr>
+                    <!--</thead>-->
+                    <tbody>
+                    <!--id,project_id,range_proportion,range_score,schedule_proportion,schedule_score,payback_proportion,-->
+                    <!--payback_score,worhday_proportion,worhday_score,cost_score,communicate_proportion,communicate_score,-->
+                    <!--data_proportion,datacheck_proportion,document_proportion,quality_score,high_risk,mid_risk,low_risk,risk_score,arrival_proportion,-->
+                    <!--contract_proportion,purchase_score-->
+                    <!--<tr th:if="${QX.query == '1'}" th:each="filecheck,stat :${filecheckitems}">-->
+                        <!--<td th:text="${stat.count}">1</td>-->
+                        <!--<td th:text="${session.projectName}"></td>-->
+                        <!--<td th:text="${filecheck.projectDiscription}"></td>-->
+                        <!--<td th:text="${filecheck.checker}"></td>-->
+                        <!--<td th:text="${#dates.format(filecheck.checkTime,'yyyy-MM-dd')}"></td>-->
+                        <!--<td th:text="${filecheck.valueScore}"></td>-->
+                        <!--<td>-->
+                        <!--<span data-toggle="tooltip" title="清单详情" th:onclick="'selectStandardday(\''+${filecheck.id}+'\');'" th:if="${QX.query == '1'}"-->
+                              <!--class="btn btn-xs btn-warning"><i class="fa fa-rmb"></i>详情 </span>-->
+                            <!--<span data-toggle="tooltip" title="删除项" th:if="${QX.del == '1'}"-->
+                                  <!--class="btn btn-xs btn-danger"-->
+                                  <!--th:onclick="'delStandardday(\''+${filecheck.id}+'\');'"   ><i-->
+                                    <!--class="fa fa-rmb"></i> 删除</span>-->
+                            <!--<span data-toggle="tooltip" title="编辑资料项"-->
+                                  <!--th:if="${QX.edit == '1'}" class="btn btn-xs btn-info" th:onclick="'editStandardday(\''+${filecheck.id}+'\',-->
+                              <!--\''+${filecheck.projectName}+'\',\''+${filecheck.projectId}+'\',-->
+                              <!--\''+${filecheck.projectDiscription}+'\',-->
+                              <!--\''+${filecheck.checker}+'\',\''+${filecheck.checkTime}+'\',-->
+                              <!--\''+${filecheck.valueScore}+'\');'">-->
+                            <!--<i class="fa fa-edit">编辑&nbsp;</i> </span>-->
+                        <!--</td>-->
+                    <!--<tr th:unless="${QX.query == '1'}" >-->
+                        <!--<td colspan="7" align="center">-->
+                            <!--<h2>此用户无权限查看该页面</h2>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade bs-example-modal-lg" id="standarydayModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title text-center" id="usermodelHead">编辑项目整体评价</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <table id="project" class="table table table-hover table-striped">
+                        <input type="hidden" name="id" th:value="${evaluations.id}"/>
+                        <input type="hidden" name="project_id" th:value="${evaluations.projectId}"/>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="range_proportion" class="col-sm-4 control-label">确认比例</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="range_proportion"
+                                               id="range_proportion" th:value="${evaluations.rangeProportion}" placeholder="范围正式确认比例">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="range_score" class="col-sm-4 control-label">确认得分</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="range_score" value=""
+                                               id="range_score" th:value="${evaluations.rangeScore}" placeholder="范围正式确认得分">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                            <div class="form-group">
+                                <label for="schedule_proportion" class="col-sm-5 control-label">进度正常比例</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" name="schedule_proportion" value=""
+                                           id="schedule_proportion" th:value="${evaluations.scheduleProportion}" placeholder="进度正常比例">
+                                </div>
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="schedule_score" class="col-sm-5 control-label">进度评定得分</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" name="schedule_score" value=""
+                                           id="schedule_score" th:value="${evaluations.scheduleScore}" placeholder="进度评定得分">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="payback_proportion" class="col-sm-5 control-label">回款比例</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="payback_proportion" value=""
+                                               id="payback_proportion" th:value="${evaluations.paybackProportion}" placeholder="回款比例">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="payback_score" class="col-sm-5 control-label">回款得分</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="payback_score" value=""
+                                               id="payback_score" th:value="${evaluations.paybackScore}" placeholder="回款得分">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="worhday_proportion" class="col-sm-5 control-label">工日比例</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="worhday_proportion" value=""
+                                               id="worhday_proportion" th:value="${evaluations.worhdayProportion}" placeholder="工日使用控制比例">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="worhday_score" class="col-sm-5 control-label">工日得分</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="worhday_score"
+                                               id="worhday_score" th:value="${evaluations.worhdayScore}" placeholder="工日使用控制得分">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="cost_score" class="col-sm-5 control-label">成本管理得分</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="cost_score"
+                                               id="cost_score"th:value="${evaluations.costScore}" placeholder="成本管理得分">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="communicate_proportion" class="col-sm-5 control-label">有效沟通比例</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="communicate_proportion" value=""
+                                               id="communicate_proportion" th:value="${evaluations.communicateProportion}" placeholder="有效沟通比例">
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    <label for="communicate_score" class="col-sm-5 control-label">有效沟通得分</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" onfocus="selectTime(this);" class="form-control" name="communicate_score" value=""
+                                               id="communicate_score" th:value="${evaluations.communicateScore}" placeholder="有效沟通得分">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="data_proportion" class="col-sm-5 control-label">资料准备完成率</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="data_proportion" value=""
+                                               id="data_proportion" th:value="${evaluations.dataProportion}" placeholder="资料准备完成率">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="datacheck_proportion" class="col-sm-5 control-label">资料核查合格率</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="datacheck_proportion" value=""
+                                               id="datacheck_proportion" th:value="${evaluations.datacheckProportion}" placeholder="资料核查合格率">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="document_proportion" class="col-sm-5 control-label">文档处理率</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="document_proportion" value=""
+                                               id="document_proportion" th:value="${evaluations.documentProportion}" placeholder="文档处理率">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="quality_score" class="col-sm-5 control-label">质量管理得分</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="quality_score" value=""
+                                               id="quality_score" th:value="${evaluations.qualityScore}" placeholder="质量管理得分">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                <label for="high_risk" class="col-sm-5 control-label">高风险比例</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="high_risk" value=""
+                                               id="high_risk" th:value="${evaluations.highRisk}" placeholder="高风险比例">
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    <label for="mid_risk" class="col-sm-5 control-label">中风险比例</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="mid_risk" value=""
+                                               id="mid_risk" th:value="${evaluations.midRisk}" placeholder="中风险比例">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="low_risk" class="col-sm-5 control-label">低风险比例</label>
+                                    <div class="col-sm-7">
+                                        <!--<input type="" class="form-control form_datetime" id="process"-->
+                                        <!--name="process"/>-->
+                                        <input type="text"  class="form-control" name="low_risk" value=""
+                                               id="low_risk" th:value="${evaluations.lowRisk}" placeholder="低风险比例">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                        <td>
+                            <div class="form-group">
+                                <label for="risk_score" class="col-sm-5 control-label">风险管理得分</label>
+                                <div class="col-sm-6">
+                                    <input type="text"  class="form-control" name="risk_score" value=""
+                                           id="risk_score" th:value="${evaluations.riskScore}" placeholder="风险管理得分">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                            <label for="arrival_proportion" class="col-sm-5 control-label">到货正常率</label>
+                                <div class="col-sm-7">
+                                    <input type="text"  class="form-control" name="arrival_proportion" value=""
+                                           id="arrival_proportion" th:value="${evaluations.arrivalProportion}" placeholder="到货正常率">
+                                </div>
+                            </div>
+                        </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="contract_proportion" class="col-sm-5 control-label">合同签订合理率</label>
+                                    <div class="col-sm-7">
+                                        <input type="text"  class="form-control" name="contract_proportion" value=""
+                                               id="contract_proportion" th:value="${evaluations.contractProportion}" placeholder="合同签订合理率">
+                                    </div>
+                                </div>
+                            </td>
+                    </tr>
+                        <tr>
+                        <td>
+                            <div class="form-group">
+                            <label for="purchase_score" class="col-sm-5 control-label">采购管理得分</label>
+                                <div class="col-sm-7">
+                                    <input type="text"  class="form-control" name="purchase_score" value=""
+                                           id="purchase_score" th:value="${evaluations.purchaseScore}" placeholder="采购管理得分">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-success" id="standardaySubmit">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.core.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.excheck.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/dist/js/adminlte.min.js}"></script>
+<script th:src="@{/js/path.js}"></script>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/daterangepicker.css}">
+<script th:src="@{/js/moment.js}"></script>
+<script th:src="@{/js/daterangepicker.js}"></script>
+<script th:inline="javascript">
+    $(function() {
+        //提示框
+        $("[data-toggle='tooltip']").tooltip();
+    });
+
+    //添加检查清单
+    $("#editStandarDay").click(function () {
+        $("#standarydayModal").modal("show");
+    });
+    //确认按钮
+    $("#standardaySubmit").click(function(){
+        var id = $("input[name='id']").val();
+        var project_id = $("input[name='project_id']").val();
+        var range_proportion = $("input[name='range_proportion']").val();
+        var range_score = $("input[name='range_score']").val();
+        var schedule_proportion = $("input[name='schedule_proportion']").val();
+        var schedule_score = $("#schedule_score").val();
+        var payback_proportion = $("input[name='payback_proportion']").val();
+        var payback_score = $("input[name='payback_score']").val();
+        var worhday_proportion = $("input[name='worhday_proportion']").val();
+        var worhday_score = $("input[name='worhday_score']").val();
+        var cost_score = $("#cost_score").val();
+        var communicate_proportion = $("input[name='communicate_proportion']").val();
+        var communicate_score = $("input[name='communicate_score']").val();
+        var data_proportion = $("input[name='data_proportion']").val();
+        var datacheck_proportion = $("input[name='datacheck_proportion']").val();
+        var document_proportion = $("#document_proportion").val();
+
+        var quality_score = $("input[name='quality_score']").val();
+        var high_risk = $("input[name='high_risk']").val();
+        var mid_risk = $("input[name='mid_risk']").val();
+        var low_risk = $("input[name='low_risk']").val();
+        var risk_score = $("#risk_score").val();
+        var arrival_proportion = $("input[name='arrival_proportion']").val();
+        var contract_proportion = $("input[name='contract_proportion']").val();
+        var purchase_score = $("input[name='purchase_score']").val();
+        $.ajax({
+            type:"post",
+            url:_ctx +"/enaluation/edit",
+            cache:false,
+            dataType:"json",
+            data:{
+                id:id,
+                projectId:project_id,
+                rangeProportion:range_proportion,
+                rangeScore:range_score,scheduleProportion:schedule_proportion,
+                scheduleScore:schedule_score,paybackProportion:payback_proportion,
+                paybackScore:payback_score,worhdayProportion:worhday_proportion,
+                worhdayScore:worhday_score,costScore:cost_score,communicateProportion:communicate_proportion,communicateScore:communicate_score,
+                dataProportion:data_proportion,datacheckProportion:datacheck_proportion,
+                documentProportion:document_proportion,qualityScore:quality_score,highRisk:high_risk,
+                midRisk:mid_risk,low_risk:low_risk,riskScore:risk_score,arrivalProportion:arrival_proportion,
+                contractProportion:contract_proportion,purchaseScore:purchase_score
+            },
+            success:function(data){
+                if(data.status == 'success'){
+                    $("#standarydayModal").modal("hide");
+                    window.location.href=window.location.href;
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    });
+    //查询
+    function selectStandardday(id) {
+        window.location.href = _ctx + "/filecheckitem/list/" +id;
+    }
+    function delStandardday(id){
+        if (confirm("你确定要删除工日吗？")) {
+            $.ajax({
+                type: "GET",
+                url: _ctx + "/filecheck/del/"+ id,
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    if (data.status == 'success') {
+                        window.location.href = window.location.href;
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+    }
+</script>

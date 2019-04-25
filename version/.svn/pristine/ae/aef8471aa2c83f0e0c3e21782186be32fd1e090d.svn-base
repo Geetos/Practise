@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.XmpercentageMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.Xmpercentage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="commission_money" property="commissionMoney" jdbcType="DECIMAL" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="process" property="process" jdbcType="VARCHAR" />
+    <result column="process_percent" property="processPercent" jdbcType="DOUBLE" />
+    <result column="percentage_type" property="percentageType" jdbcType="VARCHAR" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, commission_money, reason, project_id,process,process_percent
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_commission_percentage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_commission_percentage
+    where project_id = #{projectId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_commission_percentage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.Xmpercentage" >
+    insert into dx_jf_commission_percentage (id, commission_money, reason, 
+      project_id,process,process_percent)
+    values (#{id,jdbcType=INTEGER}, #{commissionMoney,jdbcType=DECIMAL}, #{reason,jdbcType=VARCHAR}, 
+      #{projectId,jdbcType=INTEGER},#{process,jdbcType=VARCHAR},#{processPercent,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.Xmpercentage" >
+    insert into dx_jf_commission_percentage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="commissionMoney != null" >
+        commission_money,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="process != null" >
+        process,
+      </if>
+      <if test="processPercent != null" >
+        process_percent,
+    </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="commissionMoney != null" >
+        #{commissionMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="process != null" >
+        #{process,jdbcType=VARCHAR},
+      </if>
+      <if test="processPercent != null" >
+        #{processPercent,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.Xmpercentage" >
+    update dx_jf_commission_percentage
+    <set >
+      <if test="commissionMoney != null" >
+        commission_money = #{commissionMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="process != null" >
+        process = #{process,jdbcType=VARCHAR},
+      </if>
+      <if test="processPercent != null" >
+        process_percent = #{processPercent,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.Xmpercentage" >
+    update dx_jf_commission_percentage
+    set commission_money = #{commissionMoney,jdbcType=DECIMAL},
+      reason = #{reason,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=INTEGER},
+      process =  #{process,jdbcType=VARCHAR},
+      process_percent = #{processPercent,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_commission_percentage
+  </select>
+  <select id="selectByProjId" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_commission_percentage
+    where project_id=#{projectId,jdbcType=INTEGER}
+  </select>
+</mapper>

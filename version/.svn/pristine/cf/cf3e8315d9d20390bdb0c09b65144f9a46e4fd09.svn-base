@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/css-head :: css-head">
+    <meta charset="UTF-8">
+    <meta name="_ctx" th:content="@{/}" />
+</head>
+<style>
+    .table-hide{
+        visibility: hidden;
+    }
+</style>
+<body>
+<section class="content-header">
+    <h1> 项目资金明细
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 项目管理</a></li>
+        <li class="active">资金管理</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <!-- table money -->
+        <div id="table-money"></div>
+    </div>
+</section>
+<!-- 新增或修改的模态框 -->
+<div class="modal fade bs-example-modal-lg" id="moneyModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title text-center" id="moneymodelHead">添加项目</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <table id="project_money" class="table table table-hover table-striped">
+                        <input type="hidden" name="id" value=""/>
+                        <input type="hidden" name="user_id" value=""/>
+                        <input type="hidden" name="register_time" value=""/>
+                        <input type="hidden" name="url" value=""/>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="contract_money" class="col-sm-2 control-label">合同金额</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="contract_money" value=""
+                                               id="contract_money" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="cost_money" class="col-sm-2 control-label">商品采购成本</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="cost_money" value=""
+                                               id="cost_money" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="subcontracting_cost" class="col-sm-2 control-label">转包实施成本</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="subcontracting_cost" value=""
+                                               id="subcontracting_cost" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <label for="project_profit" class="col-sm-2 control-label">项目利润率</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="project_profit" value=""
+                                           id="project_profit" placeholder="">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="project_industry" class="col-sm-2 control-label">已回款金额</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="payback_money" value=""
+                                               id="payback_money" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="project_Subscriber" class="col-sm-2 control-label">项目合同回款要求</label>
+                                    <div class="col-sm-10">
+                                        <textfield type="text" class="form-control" name="remark" value=""
+                                                   id="remark" placeholder="">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-success" id="moneySubmit">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.core.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.excheck.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/dist/js/adminlte.min.js}"></script>
+<script th:src="@{/js/path.js}"></script>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/myTable.js}"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+<link rel="stylesheet" th:href="@{/css/font-awesome/css/all.css}">
+<link rel="stylesheet" th:href="@{/css/myTable.css}">
+<link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+<script>
+    $(function() {
+        var project_id = sessionStorage.getItem("project_id");
+
+        var table = new myTable({
+            anchor: "table-money",
+            fields: ["合同金额", "商品采购成本", "转包实施成本", "项目利润率", "已回款金额", "回款比例", "项目合同回款要求"],
+            keyname: ["contractMoney", "costMoney", "subcontractingCost", "profitMargin", "paybackMoney", "paybackRatio", "reamek"],
+            dataType: ['text', 'text', 'text', 'text', 'text', 'text', 'text'],
+            functions: {
+                columnLine: true,
+                insert: true,
+                modify: true,
+                search: true,
+                delete: true,
+                commit: true,
+                refresh: true,
+                undoOperation: true,
+                autoReFresh: false,
+                refreshFrequency: 1000
+            },
+            style: {
+                strip: true,
+                darkMode: false,
+                tableBorder: true,
+                headerPanel: true,
+                headerInfo: '资金明细表格',
+            },
+            ajax: [{
+                action: myTable.INSERT,
+                type: 'POST',
+                url: 'localhost/add',
+                success: null,
+                fail: null
+            }, {
+                action: myTable.MODIFY,
+                type: 'POST',
+                url: 'localhost/modify',
+                success: null,
+                fail: null
+            }, {
+                action: myTable.QUERY,
+                type: 'GET',
+                url: '/moneyinfo/query/1',
+                success: null,
+                fail: null
+            }, {
+                action: myTable.DELETE,
+                type: 'POST',
+                url: 'localhost/delete',
+                success: null,
+                ail: null
+            }]
+        })
+
+        table.fetchTable()
+    })
+</script>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head th:include="include/css-head :: css-head">
+</head>
+<style>
+    textarea {
+        width: 100%;
+        height: 100px;
+    }
+
+    .file {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+
+    .file input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .file:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+    }
+
+    .chk_1 {
+        display: none;
+    }
+
+    .chk_1 + label {
+        background-color: #FFF;
+        border: 1px solid #C1CACA;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+        padding: 9px;
+        border-radius: 5px;
+        display: inline-block;
+        position: relative;
+        margin-right: 30px;
+    }
+
+    .chk_1 + label:active {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .chk_1:checked + label {
+        background-color: #ECF2F7;
+        border: 1px solid #92A1AC;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+        color: #243441;
+    }
+
+    .chk_1:checked + label:after {
+        content: '\2714';
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        color: #758794;
+        width: 100%;
+        text-align: center;
+        font-size: 1.4em;
+        padding: 1px 0 0 0;
+        vertical-align: text-top;
+    }
+
+    div.cbp label.font {
+        text-align: center;
+        font-size: 1.4em;
+        vertical-align: text-top;
+        margin-top: -15px;
+        margin-left: -10px;
+    }
+
+    th, td {
+        white-space: nowrap;
+
+    }
+
+    .dataTables_scrollBody {
+        overflow: scroll;
+    }
+    .table-body{
+        padding-right: 108px;
+        position: relative;
+    }
+    .manipulation_table{
+        position: absolute;
+        float: right;
+        right: 0px;
+        top: 0px;
+        padding-top:10px
+    }
+    .manipulation_table > table > tbody > tr > td{
+        padding-bottom: 5.5px;
+    }
+    .box-body{
+        overflow-x: scroll;
+    }
+    .btn-xs{
+        width: 22px;
+    }
+</style>
+<body>
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <!-- <h1>
+           西游记告诉我们：凡是有后台的妖怪都被接走了，
+       <small>凡是没后台的都被一棒子打死了</small>
+     </h1>
+     <ol class="breadcrumb">
+       <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+       <li class="active">用户管理</li>
+     </ol>-->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">项目进度列表</h3>
+            <br><br>
+            <button th:if="${QX.add == '1' && QX.query == '1' && session.LEVEL.level ge 300}" class="btn btn-success btn-sm" id="addProjectschedule"><i
+                    class="fa fa-plus"></i> &nbsp;&nbsp;添加项目进度
+            </button>
+        </div>
+        <!-- /.box-header -->
+        <!--<div class="table-body">
+            <div class="box-body">-->
+                <table id="roleList" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>建设总工期</th>
+                        <th>开工日期</th>
+                        <th>完工日期</th>
+                        <th>初验日期</th>
+                        <th>终验日期</th>
+                        <th>质保期要求</th>
+                        <th>合同签订时间</th>
+                        <th>是否存在变更</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${QX.query == '1'}" th:each="projectschedule,stat :${projectschedules}">
+                        <td th:text="${stat.count}">1</td>
+                        <td th:text="${projectschedule.totaldays}"></td>
+                        <td th:text="${projectschedule?.startdate}==null?'':${#dates.format(projectschedule.startdate,'yyyy-MM-dd')}"></td>
+                        <td th:text="${projectschedule?.enddate}==null?'':${#dates.format(projectschedule.enddate,'yyyy-MM-dd')}"></td>
+                       <td th:text="${projectschedule?.initialdate}==null?'':${#dates.format(projectschedule.initialdate,'yyyy-MM-dd')}"></td>
+                       <td th:text="${projectschedule?.finaldate}==null?'':${#dates.format(projectschedule.finaldate,'yyyy-MM-dd')}"></td>
+                        <td th:text="${projectschedule.warrantyClaim}"></td>
+                        <td th:text="${projectschedule?.signtime}==null?'':${#dates.format(projectschedule.signtime,'yyyy-MM-dd')}"></td>
+                        <td th:text="${projectschedule.exitalter}"></td>
+                        <td >
+                            <span data-toggle="tooltip" title="编辑" th:if="${QX.edit == '1' && session.LEVEL.level ge 300}" class="btn btn-primary btn-sm"
+                                  th:onclick="'editProjectschedule(\''+${projectschedule.id}+'\',\''+${projectschedule.projectId}+'\',\''+${projectschedule.totaldays}+'\',\''+${projectschedule.startdate}+'\',\''+${projectschedule.enddate}+'\',\''+${projectschedule.initialdate}+'\',\''+${projectschedule.finaldate}+'\',\''+${projectschedule.warrantyClaim}+'\',\''+${projectschedule.signtime}+'\',\''+${projectschedule.exitalter}+'\');'">
+                                <i class="fa fa-edit"></i>编辑
+                            </span>
+                            <span data-toggle="tooltip" title="删除" th:if="${QX.del == '1' && session.LEVEL.level ge 300}"
+                                  class="btn btn-danger btn-sm"
+                                  th:onclick="'delProjectschedule(\''+${projectschedule.id}+'\');'"><i
+                                    class="fa fa-trash-o"></i>删除</span>
+                            <span data-toggle="tooltip" title="权限不够"
+                                  th:unless="${QX.edit == '1' || QX.add == '1' || QX.del == '1'}"><i
+                                    class="fa fa-lock"></i> </span>
+                        </td>
+                    </tr>
+                    <tr th:unless="${QX.query == '1'}">
+                        <td colspan="7" align="center">
+                            <h2>此用户无权限查看该页面</h2>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+           <!-- </div>-->
+        <!--</div>-->
+    </div>
+</section>
+
+<!-- 新增或修改的模态框 -->
+<div class="modal fade bs-example-modal-lg" id="userModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title text-center" id="usermodelHead">添加项目进度</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <table id="projectschedule" class="table table table-hover table-striped">
+                        <input type="hidden" name="id" value=""/>
+                        <input type="hidden" name="projectId" value=""/>
+                        <input type="hidden" name="url" value=""/>
+                        <input type="hidden" name="exitalter" value=""/>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="totaldays" class="col-sm-2 control-label">建设总工期</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="totaldays" value=""
+                                               id="totaldays" placeholder="请输入建设总工期">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="startdate" class="col-sm-2 control-label">开工日期</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" onfocus="selectTime(this);" class="form-control" name="startdate" value=""
+                                               id="startdate" placeholder="开工日期">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="enddate" class="col-sm-2 control-label">完工日期</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" onfocus="selectTime(this);" class="form-control" name="enddate" value=""
+                                               id="enddate" placeholder="完工日期">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="initialdate" class="col-sm-2 control-label">初验日期</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" onfocus="selectTime(this);" class="form-control" name="initialdate" value=""
+                                               id="initialdate" placeholder="初验日期">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="finaldate" class="col-sm-2 control-label">终验日期</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" onfocus="selectTime(this);" class="form-control" name="finaldate" value=""
+                                               id="finaldate" placeholder="终验日期">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="warrantyClaim" class="col-sm-2 control-label">质保期要求</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="warrantyClaim" value=""
+                                               id="warrantyClaim" placeholder="质保期要求">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="signtime" class="col-sm-2 control-label">合同签订时间</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" onfocus="selectTime(this);" class="form-control" name="signtime" value=""
+                                               id="signtime" placeholder="合同签订时间">
+                                    </div>
+                                </div>
+                            </td>
+                           <!-- <td>
+                                <div class="form-group">
+                                    <label for="customer_manager" class="col-sm-2 control-label">是否存在变更</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="customer_manager" value=""
+                                               id="customer_manager" placeholder="是否存在变更">
+                                    </div>
+                                </div>
+                            </td>-->
+                        </tr>
+
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-success" id="imgSubmit">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.core.js}"></script>
+<script th:src="@{/ztree/js/jquery.ztree.excheck.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/dist/js/adminlte.min.js}"></script>
+<script th:src="@{/js/path.js}"></script>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/daterangepicker.css}">
+
+<!--<script th:src="@{/js/jquery-2.2.3.min.js}"></script>-->
+<script th:src="@{/js/moment.js}"></script>
+<script th:src="@{/js/daterangepicker.js}"></script>
+<script th:inline="javascript">
+    $(function () {
+            //提示框
+            $("[data-toggle='tooltip']").tooltip();
+            //表格分页
+            $('#roleList').DataTable({
+                "scrollX": true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false,
+                "pagingType": "full_numbers",
+                "pageLength": 10,
+                "oLanguage": {
+                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+                    "sZeroRecords": "对不起，查询不到任何相关数据",
+                    "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_条记录",
+                    "sInfoEmtpy": "找不到相关数据",
+                    "sInfoFiltered": "数据表中共为 _MAX_ 条记录)",
+                    "sProcessing": "正在加载中...",
+                    "sSearch": "搜索",
+                    "oPaginate": {
+                        "sFirst": "第一页",
+                        "sPrevious": " 上一页 ",
+                        "sNext": " 下一页 ",
+                        "sLast": " 最后一页 "
+                    },
+                }
+            });
+        }
+    );
+
+    $("#addProjectschedule").click(function () {
+        reloadModelData(_ctx + "/projectschedule/add", "添加项目进度", "添加","", "", "", "", "", "", "", "", "", "", "add");
+        $("#userModal").modal("show");
+    });
+
+    //确认按钮
+    $("#imgSubmit").click(function () {
+        var url = $("input[name='url']").val();
+        var id = $("input[name='id']").val();
+        var projectId = $("input[name='projectId']").val();
+        var totaldays = $("input[name='totaldays']").val();
+        var startdate = $("input[name='startdate']").val();
+        var enddate = $("input[name='enddate']").val();
+        var initialdate = $("input[name='initialdate']").val();
+        var finaldate = $("input[name='finaldate']").val();
+        var warrantyClaim = $("input[name='warrantyClaim']").val();
+        var signtime = $("input[name='signtime']").val();
+        var exitalter = $("input[name='exitalter']").val();
+
+        /* if (url == _ctx + '/user/add') {
+             if (!checkAccount(username, nickName, password)) {
+                 return false;
+             }
+         }*/
+        $.ajax({
+            type: "post",
+            url: url,
+            cache: false,
+            dataType: "json",
+            data: {
+                id: id,
+                projectId: projectId,
+                totaldays: totaldays,
+                startdate: startdate,
+                enddate: enddate,
+                initialdate: initialdate,
+                finaldate: finaldate,
+                warrantyClaim: warrantyClaim,
+                signtime: signtime,
+                exitalter: exitalter,
+                time: new Date().getTime()
+            },
+            success: function (data) {
+                if (data.status == 'success') {
+                    $("#userModal").modal("hide");
+                    window.location.href = window.location.href;
+                } else {
+                    alert(data.msg);
+                }
+            }
+        });
+    });
+
+    //删除项目
+    function delProjectschedule(id) {
+        if (confirm("你确定要删除此项目吗？")) {
+            $.ajax({
+                type: "GET",
+                url: _ctx + "/projectschedule/del/" + id,
+                dataType: "json",
+                data: {time: new Date().getTime()},
+                cache: false,
+                success: function (data) {
+                    if (data.status == 'success') {
+                        window.location.href = window.location.href;
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+    }
+
+    //编辑项目
+    function editProjectschedule(id, projectId, totaldays, startdate, enddate, initialdate, finaldate, warrantyClaim, signtime, exitalter) {
+        reloadModelData(_ctx + "/projectschedule/edit", "编辑项目进度", "更新", id, projectId, totaldays, startdate, enddate, initialdate, finaldate, warrantyClaim, signtime, exitalter, "edit");
+        $("#userModal").modal("show");
+    }
+
+    //验证数据
+    function checkAccount(username, nickName, password) {
+        if (username == '') {
+            $("input[name='username']").focus();
+            alert("用户名不能为空");
+            return false;
+        }
+        if (nickName == '') {
+            $("input[name='nick_name']").focus();
+            alert("昵称不能为空");
+            return false;
+        }
+        if (password == '') {
+            $("input[name='password']").focus();
+            alert("密码不能为空");
+            return false;
+        } else if (password.length < 4) {
+            $("input[name='password']").focus();
+            alert("密码个数不能少于4位");
+            return false;
+        }
+        return true;
+    }
+
+
+    Date.prototype.format = function(formatStr){
+        var str = formatStr;
+        str=str.replace(/yyyy|YYYY/,this.getFullYear());
+        str=str.replace(/MM/,(this.getMonth()+1)>9?(this.getMonth()+1).toString():'0' + (this.getMonth()+1));
+        str=str.replace(/dd|DD/,this.getDate()>9?this.getDate().toString():'0' + this.getDate());
+        return str;
+    }
+
+    //加载模态框的数据
+    function reloadModelData(url, title, btntext,id, projectId, totaldays, startdate, enddate, initialdate, finaldate, warrantyClaim, signtime, exitalter, type) {
+        $("#userModal #usermodelHead").text(title);
+        $("#userModal #imgSubmit").text(btntext);
+        $("input[name='url']").val(url);
+        $("input[name='id']").val(id);
+        $("input[name='projectId']").val(projectId);
+        $("input[name='totaldays']").val(totaldays);
+        if(type=='edit') {
+            $("input[name='startdate']").val(new Date(startdate).format("yyyy-MM-dd"));
+            $("input[name='enddate']").val(new Date(enddate).format("yyyy-MM-dd"));
+            $("input[name='initialdate']").val(new Date(initialdate).format("yyyy-MM-dd"));
+            $("input[name='finaldate']").val(new Date(finaldate).format("yyyy-MM-dd"));
+            $("input[name='signtime']").val(new Date(signtime).format("yyyy-MM-dd"));
+        }else{
+            $("input[name='startdate']").val('');
+            $("input[name='enddate']").val('');
+            $("input[name='initialdate']").val('');
+            $("input[name='finaldate']").val('');
+            $("input[name='signtime']").val('');
+        }
+        $("input[name='warrantyClaim']").val(warrantyClaim);
+        $("input[name='exitalter']").val(exitalter);
+    }
+
+    /*var input = document.getElementById("imgfile");
+ if (typeof (FileReader) === 'undefined') {
+     result.innerHTML = "抱歉，你的浏览器不支持 FileReader，请使用现代浏览器操作！";
+     input.setAttribute('disabled', 'disabled');
+ } else {
+     input.addEventListener('change', readFile, false);
+ }*/
+    function readFile() {
+        var file = this.files[0];
+        //判断是否是图片类型
+        if (!/image\/\w+/.test(file.type)) {
+            alert("只能选择图片");
+            return false;
+        }
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            base64Code = this.result;
+            $("#userModal input[name='pics']").val(this.result);
+            $("#showImg").attr("src", this.result);
+        }
+    }
+
+</script>
+</body>
+</html>

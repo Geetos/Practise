@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.ProcurementItemMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.ProcurementItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="procurement_id" property="procurementId" jdbcType="INTEGER" />
+    <result column="devicename" property="devicename" jdbcType="VARCHAR" />
+    <result column="devicetype" property="devicetype" jdbcType="VARCHAR" />
+    <result column="devicequantity" property="devicequantity" jdbcType="VARCHAR" />
+    <result column="warrantytime" property="warrantytime" jdbcType="TIMESTAMP" />
+    <result column="supplier" property="supplier" jdbcType="VARCHAR" />
+    <result column="suppliercontact" property="suppliercontact" jdbcType="VARCHAR" />
+    <result column="supplierphone" property="supplierphone" jdbcType="VARCHAR" />
+    <result column="supplieremail" property="supplieremail" jdbcType="VARCHAR" />
+    <result column="companydock" property="companydock" jdbcType="VARCHAR" />
+    <result column="starttime" property="starttime" jdbcType="TIMESTAMP" />
+    <result column="contractime" property="contractime" jdbcType="TIMESTAMP" />
+    <result column="suppliercondition" property="suppliercondition" jdbcType="VARCHAR" />
+    <result column="arrivaltime" property="arrivaltime" jdbcType="TIMESTAMP" />
+    <result column="paymentterms" property="paymentterms" jdbcType="VARCHAR" />
+    <result column="warranty" property="warranty" jdbcType="VARCHAR" />
+    <result column="endtime" property="endtime" jdbcType="TIMESTAMP" />
+    <result column="assessment" property="assessment" jdbcType="INTEGER" />
+    <result column="contractsigned" property="contractsigned" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_id, procurement_id, devicename, devicetype, devicequantity, warrantytime, 
+    supplier, suppliercontact, supplierphone, supplieremail, companydock, starttime, 
+    contractime, suppliercondition, arrivaltime, paymentterms, warranty, endtime, assessment, 
+    contractsigned, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_procurement_management_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_procurement_management_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.ProcurementItem" >
+    insert into dx_jf_procurement_management_item (id, project_id, procurement_id, 
+      devicename, devicetype, devicequantity, 
+      warrantytime, supplier, suppliercontact, 
+      supplierphone, supplieremail, companydock, 
+      starttime, contractime, suppliercondition, 
+      arrivaltime, paymentterms, warranty, 
+      endtime, assessment, contractsigned, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{procurementId,jdbcType=INTEGER}, 
+      #{devicename,jdbcType=VARCHAR}, #{devicetype,jdbcType=VARCHAR}, #{devicequantity,jdbcType=VARCHAR}, 
+      #{warrantytime,jdbcType=TIMESTAMP}, #{supplier,jdbcType=VARCHAR}, #{suppliercontact,jdbcType=VARCHAR}, 
+      #{supplierphone,jdbcType=VARCHAR}, #{supplieremail,jdbcType=VARCHAR}, #{companydock,jdbcType=VARCHAR}, 
+      #{starttime,jdbcType=TIMESTAMP}, #{contractime,jdbcType=TIMESTAMP}, #{suppliercondition,jdbcType=VARCHAR}, 
+      #{arrivaltime,jdbcType=TIMESTAMP}, #{paymentterms,jdbcType=VARCHAR}, #{warranty,jdbcType=VARCHAR}, 
+      #{endtime,jdbcType=TIMESTAMP}, #{assessment,jdbcType=INTEGER}, #{contractsigned,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.ProcurementItem" >
+    insert into dx_jf_procurement_management_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="procurementId != null" >
+        procurement_id,
+      </if>
+      <if test="devicename != null" >
+        devicename,
+      </if>
+      <if test="devicetype != null" >
+        devicetype,
+      </if>
+      <if test="devicequantity != null" >
+        devicequantity,
+      </if>
+      <if test="warrantytime != null" >
+        warrantytime,
+      </if>
+      <if test="supplier != null" >
+        supplier,
+      </if>
+      <if test="suppliercontact != null" >
+        suppliercontact,
+      </if>
+      <if test="supplierphone != null" >
+        supplierphone,
+      </if>
+      <if test="supplieremail != null" >
+        supplieremail,
+      </if>
+      <if test="companydock != null" >
+        companydock,
+      </if>
+      <if test="starttime != null" >
+        starttime,
+      </if>
+      <if test="contractime != null" >
+        contractime,
+      </if>
+      <if test="suppliercondition != null" >
+        suppliercondition,
+      </if>
+      <if test="arrivaltime != null" >
+        arrivaltime,
+      </if>
+      <if test="paymentterms != null" >
+        paymentterms,
+      </if>
+      <if test="warranty != null" >
+        warranty,
+      </if>
+      <if test="endtime != null" >
+        endtime,
+      </if>
+      <if test="assessment != null" >
+        assessment,
+      </if>
+      <if test="contractsigned != null" >
+        contractsigned,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="procurementId != null" >
+        #{procurementId,jdbcType=INTEGER},
+      </if>
+      <if test="devicename != null" >
+        #{devicename,jdbcType=VARCHAR},
+      </if>
+      <if test="devicetype != null" >
+        #{devicetype,jdbcType=VARCHAR},
+      </if>
+      <if test="devicequantity != null" >
+        #{devicequantity,jdbcType=VARCHAR},
+      </if>
+      <if test="warrantytime != null" >
+        #{warrantytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="supplier != null" >
+        #{supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="suppliercontact != null" >
+        #{suppliercontact,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierphone != null" >
+        #{supplierphone,jdbcType=VARCHAR},
+      </if>
+      <if test="supplieremail != null" >
+        #{supplieremail,jdbcType=VARCHAR},
+      </if>
+      <if test="companydock != null" >
+        #{companydock,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null" >
+        #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractime != null" >
+        #{contractime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suppliercondition != null" >
+        #{suppliercondition,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivaltime != null" >
+        #{arrivaltime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentterms != null" >
+        #{paymentterms,jdbcType=VARCHAR},
+      </if>
+      <if test="warranty != null" >
+        #{warranty,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null" >
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assessment != null" >
+        #{assessment,jdbcType=INTEGER},
+      </if>
+      <if test="contractsigned != null" >
+        #{contractsigned,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.ProcurementItem" >
+    update dx_jf_procurement_management_item
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="procurementId != null" >
+        procurement_id = #{procurementId,jdbcType=INTEGER},
+      </if>
+      <if test="devicename != null" >
+        devicename = #{devicename,jdbcType=VARCHAR},
+      </if>
+      <if test="devicetype != null" >
+        devicetype = #{devicetype,jdbcType=VARCHAR},
+      </if>
+      <if test="devicequantity != null" >
+        devicequantity = #{devicequantity,jdbcType=VARCHAR},
+      </if>
+      <if test="warrantytime != null" >
+        warrantytime = #{warrantytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="supplier != null" >
+        supplier = #{supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="suppliercontact != null" >
+        suppliercontact = #{suppliercontact,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierphone != null" >
+        supplierphone = #{supplierphone,jdbcType=VARCHAR},
+      </if>
+      <if test="supplieremail != null" >
+        supplieremail = #{supplieremail,jdbcType=VARCHAR},
+      </if>
+      <if test="companydock != null" >
+        companydock = #{companydock,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null" >
+        starttime = #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractime != null" >
+        contractime = #{contractime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suppliercondition != null" >
+        suppliercondition = #{suppliercondition,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivaltime != null" >
+        arrivaltime = #{arrivaltime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentterms != null" >
+        paymentterms = #{paymentterms,jdbcType=VARCHAR},
+      </if>
+      <if test="warranty != null" >
+        warranty = #{warranty,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null" >
+        endtime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assessment != null" >
+        assessment = #{assessment,jdbcType=INTEGER},
+      </if>
+      <if test="contractsigned != null" >
+        contractsigned = #{contractsigned,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.ProcurementItem" >
+    update dx_jf_procurement_management_item
+    set project_id = #{projectId,jdbcType=INTEGER},
+      procurement_id = #{procurementId,jdbcType=INTEGER},
+      devicename = #{devicename,jdbcType=VARCHAR},
+      devicetype = #{devicetype,jdbcType=VARCHAR},
+      devicequantity = #{devicequantity,jdbcType=VARCHAR},
+      warrantytime = #{warrantytime,jdbcType=TIMESTAMP},
+      supplier = #{supplier,jdbcType=VARCHAR},
+      suppliercontact = #{suppliercontact,jdbcType=VARCHAR},
+      supplierphone = #{supplierphone,jdbcType=VARCHAR},
+      supplieremail = #{supplieremail,jdbcType=VARCHAR},
+      companydock = #{companydock,jdbcType=VARCHAR},
+      starttime = #{starttime,jdbcType=TIMESTAMP},
+      contractime = #{contractime,jdbcType=TIMESTAMP},
+      suppliercondition = #{suppliercondition,jdbcType=VARCHAR},
+      arrivaltime = #{arrivaltime,jdbcType=TIMESTAMP},
+      paymentterms = #{paymentterms,jdbcType=VARCHAR},
+      warranty = #{warranty,jdbcType=VARCHAR},
+      endtime = #{endtime,jdbcType=TIMESTAMP},
+      assessment = #{assessment,jdbcType=INTEGER},
+      contractsigned = #{contractsigned,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findProcurementItemByProcurementId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_procurement_management_item
+    where procurement_id = #{procurementId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByProcurementId" parameterType="java.lang.Integer" >
+    delete from dx_jf_procurement_management_item
+    where procurement_id = #{procurementId,jdbcType=INTEGER}
+  </delete>
+</mapper>

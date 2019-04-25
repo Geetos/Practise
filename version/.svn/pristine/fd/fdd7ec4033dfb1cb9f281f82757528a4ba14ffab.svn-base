@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.MoneyInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.MoneyInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="contract_money" property="contractMoney" jdbcType="DECIMAL" />
+    <result column="cost_money" property="costMoney" jdbcType="DECIMAL" />
+    <result column="subcontracting_cost" property="subcontractingCost" jdbcType="DECIMAL" />
+    <result column="profit_margin" property="profitMargin" jdbcType="DECIMAL" />
+    <result column="payback_money" property="paybackMoney" jdbcType="DECIMAL" />
+    <result column="payback_ratio" property="paybackRatio" jdbcType="DECIMAL" />
+    <!--<result column="payback_time" property="paybackTime" jdbcType="INTEGER" />
+    <result column="paytime_money" property="paytimeMoney" jdbcType="DECIMAL" />-->
+    <result column="reamek" property="reamek" jdbcType="VARCHAR" />
+
+      <collection property="moneyInfoItems" ofType="com.jxtele.projectmanage.entity.MoneyInfoItem"
+                  column="id" select="com.jxtele.projectmanage.dao.MoneyInfoItemMapper.findMoneyInfoItemByMoneyInfoId">
+      </collection>
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_id, contract_money, cost_money, subcontracting_cost, profit_margin, payback_money, 
+    payback_ratio,reamek
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_money_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_money_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.MoneyInfo" >
+    insert into dx_jf_money_info (id, project_id, contract_money, 
+      cost_money, subcontracting_cost, profit_margin, 
+      payback_money, payback_ratio, reamek)
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{contractMoney,jdbcType=DECIMAL}, 
+      #{costMoney,jdbcType=DECIMAL}, #{subcontractingCost,jdbcType=DECIMAL}, #{profitMargin,jdbcType=DECIMAL}, 
+      #{paybackMoney,jdbcType=DECIMAL}, #{paybackRatio,jdbcType=DECIMAL}, #{reamek,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.MoneyInfo" >
+    insert into dx_jf_money_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="contractMoney != null" >
+        contract_money,
+      </if>
+      <if test="costMoney != null" >
+        cost_money,
+      </if>
+      <if test="subcontractingCost != null" >
+        subcontracting_cost,
+      </if>
+      <if test="profitMargin != null" >
+        profit_margin,
+      </if>
+      <if test="paybackMoney != null" >
+        payback_money,
+      </if>
+      <if test="paybackRatio != null" >
+        payback_ratio,
+      </if>
+      <if test="reamek != null" >
+        reamek,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="contractMoney != null" >
+        #{contractMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="costMoney != null" >
+        #{costMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="subcontractingCost != null" >
+        #{subcontractingCost,jdbcType=DECIMAL},
+      </if>
+      <if test="profitMargin != null" >
+        #{profitMargin,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackMoney != null" >
+        #{paybackMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackRatio != null" >
+        #{paybackRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="reamek != null" >
+        #{reamek,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.MoneyInfo" >
+    update dx_jf_money_info
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="contractMoney != null" >
+        contract_money = #{contractMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="costMoney != null" >
+        cost_money = #{costMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="subcontractingCost != null" >
+        subcontracting_cost = #{subcontractingCost,jdbcType=DECIMAL},
+      </if>
+      <if test="profitMargin != null" >
+        profit_margin = #{profitMargin,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackMoney != null" >
+        payback_money = #{paybackMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="paybackRatio != null" >
+        payback_ratio = #{paybackRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="reamek != null" >
+        reamek = #{reamek,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.MoneyInfo" >
+    update dx_jf_money_info
+    set project_id = #{projectId,jdbcType=INTEGER},
+      contract_money = #{contractMoney,jdbcType=DECIMAL},
+      cost_money = #{costMoney,jdbcType=DECIMAL},
+      subcontracting_cost = #{subcontractingCost,jdbcType=DECIMAL},
+      profit_margin = #{profitMargin,jdbcType=DECIMAL},
+      payback_money = #{paybackMoney,jdbcType=DECIMAL},
+      payback_ratio = #{paybackRatio,jdbcType=DECIMAL},
+      reamek = #{reamek,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findMoneyInfoByProjId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_money_info
+    where project_id = #{projid,jdbcType=INTEGER}
+  </select>
+
+
+</mapper>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtele.projectmanage.dao.ProjectScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtele.projectmanage.entity.ProjectSchedule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="totaldays" property="totaldays" jdbcType="DECIMAL" />
+    <result column="startdate" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="enddate" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="initialdate" property="initialdate" jdbcType="TIMESTAMP" />
+    <result column="finaldate" property="finaldate" jdbcType="TIMESTAMP" />
+    <result column="warranty_claim" property="warrantyClaim" jdbcType="VARCHAR" />
+    <result column="signtime" property="signtime" jdbcType="TIMESTAMP" />
+    <result column="exitalter" property="exitalter" jdbcType="INTEGER" />
+    <collection property="alterSchedules" ofType="com.jxtele.projectmanage.entity.AlterSchedule"
+                column="id" select="com.jxtele.projectmanage.dao.AlterScheduleMapper.findAlterScheduleByctScheduleid">
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_id, totaldays, startdate, enddate, initialdate, finaldate, warranty_claim, 
+    signtime, exitalter
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dx_jf_ct_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dx_jf_ct_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxtele.projectmanage.entity.ProjectSchedule" >
+    insert into dx_jf_ct_schedule (id, project_id, totaldays, 
+      startdate, enddate, initialdate, 
+      finaldate, warranty_claim, signtime, 
+      exitalter)
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{totaldays,jdbcType=DECIMAL}, 
+      #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{initialdate,jdbcType=TIMESTAMP}, 
+      #{finaldate,jdbcType=TIMESTAMP}, #{warrantyClaim,jdbcType=VARCHAR}, #{signtime,jdbcType=TIMESTAMP}, 
+      #{exitalter,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtele.projectmanage.entity.ProjectSchedule" >
+    insert into dx_jf_ct_schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="totaldays != null" >
+        totaldays,
+      </if>
+      <if test="startdate != null" >
+        startdate,
+      </if>
+      <if test="enddate != null" >
+        enddate,
+      </if>
+      <if test="initialdate != null" >
+        initialdate,
+      </if>
+      <if test="finaldate != null" >
+        finaldate,
+      </if>
+      <if test="warrantyClaim != null" >
+        warranty_claim,
+      </if>
+      <if test="signtime != null" >
+        signtime,
+      </if>
+      <if test="exitalter != null" >
+        exitalter,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="totaldays != null" >
+        #{totaldays,jdbcType=DECIMAL},
+      </if>
+      <if test="startdate != null" >
+        #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="initialdate != null" >
+        #{initialdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finaldate != null" >
+        #{finaldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="warrantyClaim != null" >
+        #{warrantyClaim,jdbcType=VARCHAR},
+      </if>
+      <if test="signtime != null" >
+        #{signtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="exitalter != null" >
+        #{exitalter,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtele.projectmanage.entity.ProjectSchedule" >
+    update dx_jf_ct_schedule
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="totaldays != null" >
+        totaldays = #{totaldays,jdbcType=DECIMAL},
+      </if>
+      <if test="startdate != null" >
+        startdate = #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        enddate = #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="initialdate != null" >
+        initialdate = #{initialdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finaldate != null" >
+        finaldate = #{finaldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="warrantyClaim != null" >
+        warranty_claim = #{warrantyClaim,jdbcType=VARCHAR},
+      </if>
+      <if test="signtime != null" >
+        signtime = #{signtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="exitalter != null" >
+        exitalter = #{exitalter,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtele.projectmanage.entity.ProjectSchedule" >
+    update dx_jf_ct_schedule
+    set project_id = #{projectId,jdbcType=INTEGER},
+      totaldays = #{totaldays,jdbcType=DECIMAL},
+      startdate = #{startdate,jdbcType=TIMESTAMP},
+      enddate = #{enddate,jdbcType=TIMESTAMP},
+      initialdate = #{initialdate,jdbcType=TIMESTAMP},
+      finaldate = #{finaldate,jdbcType=TIMESTAMP},
+      warranty_claim = #{warrantyClaim,jdbcType=VARCHAR},
+      signtime = #{signtime,jdbcType=TIMESTAMP},
+      exitalter = #{exitalter,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findProjectScheduleByProjId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from dx_jf_ct_schedule
+    where project_id = #{projid,jdbcType=INTEGER}
+  </select>
+</mapper>

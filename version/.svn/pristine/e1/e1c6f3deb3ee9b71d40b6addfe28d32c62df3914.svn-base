@@ -1,0 +1,84 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+
+.myTable-header {
+    position: relative;
+    padding-bottom: 4px;
+}
+
+.myTable-header .panel-btn {
+    right: 0px;
+    display: flex;
+}
+
+.myTable-btn {
+    width:110px;
+    padding: 0px;
+    padding-top: 2px;
+    cursor: pointer;
+    margin-left: 10px;
+    line-height:28px !important;
+}
+
+.myTable-btn-cell {
+    width: 30px;
+    float: right;
+    right: 0px;
+    cursor: pointer;
+    margin: 0px;
+    margin-left: 5px;
+}
+
+.myTable-btn-auto {
+    visibility: hidden;
+}
+
+.myTable tbody tr:hover .myTable-btn-auto {
+    visibility: visible;
+}
+
+.myTable th {
+    white-space: nowrap;
+}
+
+/* .myTable tbody:not(.row-insert) tr:hover {
+    transition: all 0.3s;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+} */
+
+.myTable-hide {
+    display: none;
+}
+
+.myTable .row-insert {
+    background-color: #d3ecd9 !important;
+    border-color: #d3ecd9;
+}
+
+.myTable .lastSndCell {
+    border-right: 0px;
+}
+
+.myTable .lastCell {
+    border-left: 0px;
+    padding: 0px;
+    padding-right: 10px;
+    width: 85px;
+}
+
+.myTable th {
+    border-color: #a5a4a4 !important;
+}
+
+.myTable .new-line-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: green;
+    float: left;
+    margin-top: 6px;
+    margin-right: 4px;
+
+}

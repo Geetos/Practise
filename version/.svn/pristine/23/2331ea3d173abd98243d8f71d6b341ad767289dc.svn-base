@@ -1,0 +1,28 @@
+package com.jxtele.projectmanage.dao;
+
+import com.jxtele.projectmanage.entity.Project;
+import com.jxtele.projectmanage.util.ParameterMap;
+
+import java.util.List;
+
+public interface ProjectMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ParameterMap pm);
+
+    int insertSelective(Project record);
+
+    Project selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(ParameterMap pm);
+
+    int updateByPrimaryKey(Project record);
+
+    List<Project> findProjectByUserid(Integer userId);
+
+    List<Project> findAllProject();
+
+    List<Project> findProjectByTeamBuild(Integer userId);
+
+
+}
